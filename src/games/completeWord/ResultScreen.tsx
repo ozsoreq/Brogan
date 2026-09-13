@@ -37,9 +37,10 @@ export function ResultScreen({
           initial={{ scale: 0.5 }}
           animate={{ scale: 1 }}
           transition={{ type: 'spring', stiffness: 200, damping: 12, delay: 0.1 }}
-          className="bg-gradient-to-br from-violet-600 to-fuchsia-500 bg-clip-text text-7xl font-extrabold text-transparent"
+          className="flex items-baseline justify-center gap-1 bg-gradient-to-br from-violet-600 to-fuchsia-500 bg-clip-text text-transparent"
         >
-          {percentage}
+          <span className="text-7xl font-extrabold">{percentage}</span>
+          <span className="text-3xl font-bold">/100</span>
         </motion.p>
       </div>
       <p className="text-slate-600">
