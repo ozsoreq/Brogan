@@ -21,7 +21,7 @@ export function WordDisplay({ round, feedback }: WordDisplayProps) {
         {round.emoji}
       </motion.div>
 
-      <div className="flex flex-row-reverse gap-2 sm:gap-3" dir="rtl">
+      <div className="flex gap-2 sm:gap-3" dir="rtl">
         {letters.map((char, index) => {
           const isBlank = index === round.blankIndex
 
