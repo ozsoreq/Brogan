@@ -30,12 +30,12 @@ export function useCompleteWordGame() {
       if (isCorrect) setScore((s) => s + 1)
 
       setTimeout(() => {
+        setSelectedLetter(null)
+        setFeedback(null)
         if (isLastRound) {
           setFinished(true)
         } else {
           setCurrentIndex((i) => i + 1)
-          setSelectedLetter(null)
-          setFeedback(null)
           setLocked(false)
         }
       }, FEEDBACK_DELAY_MS)
