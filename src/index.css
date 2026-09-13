@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Heebo", "Segoe UI", system-ui, sans-serif;
+  --font-sans: "Segoe UI", system-ui, "Arial Hebrew", Arial, sans-serif;
 }
 
 html,
