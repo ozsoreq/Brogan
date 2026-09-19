@@ -1,6 +1,6 @@
 export const TOTAL_LEVELS = 50
 export const EXERCISES_PER_LEVEL = 10
-export const PASS_RATIO = 0.7
+export const PASS_RATIO = 1
 
 export type Operator = '+' | '−' | '×' | '÷'
 

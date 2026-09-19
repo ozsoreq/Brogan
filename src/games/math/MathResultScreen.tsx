@@ -39,7 +39,7 @@ export function MathResultScreen({
       </p>
       {!passed && (
         <p className="font-semibold text-slate-800">
-          צריך לפחות 7 מתוך {EXERCISES_PER_LEVEL} כדי לעבור שלב. נסו שוב!
+          צריך {EXERCISES_PER_LEVEL} מתוך {EXERCISES_PER_LEVEL} (הכל נכון!) כדי לעבור שלב. נסו שוב!
         </p>
       )}
 
