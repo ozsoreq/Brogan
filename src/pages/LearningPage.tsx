@@ -19,11 +19,11 @@ export function LearningPage() {
           onClick={() => navigate('/learning/complete-word')}
         />
         <ModuleCard
-          title="חשבון בסיסי"
-          description="בקרוב..."
+          title="חשבון"
+          description="50 שלבים של חיבור, חיסור, כפל וחילוק"
           icon={Hash}
           color="bg-sky-500"
-          comingSoon
+          onClick={() => navigate('/learning/math')}
         />
         <ModuleCard
           title="צבעים וצורות"

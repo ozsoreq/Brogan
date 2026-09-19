@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { Check, X } from 'lucide-react'
-import type { Feedback } from './types'
+
+export type Feedback = 'correct' | 'wrong' | null
 
 interface FeedbackOverlayProps {
   feedback: Feedback

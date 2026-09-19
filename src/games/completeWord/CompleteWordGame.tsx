@@ -1,10 +1,10 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { AppHeader } from '../../components/AppHeader'
+import { FeedbackOverlay } from '../../components/FeedbackOverlay'
 import { useCompleteWordGame } from './useCompleteWordGame'
 import { WordDisplay } from './WordDisplay'
 import { LetterGrid } from './LetterGrid'
-import { FeedbackOverlay } from './FeedbackOverlay'
 import { ResultScreen } from './ResultScreen'
 
 export function CompleteWordGame() {
