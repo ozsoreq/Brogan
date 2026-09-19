@@ -4,6 +4,9 @@ export const PASS_RATIO = 1
 
 export type Operator = '+' | '−' | '×' | '÷'
 
+const MULTIPLICATION_STARTS_AT_LEVEL = 10
+const DIVISION_STARTS_AT_LEVEL = 15
+
 export interface MathExercise {
   a: number
   b: number
@@ -79,13 +82,20 @@ function generateExercise(level: number, operator: Operator): MathExercise {
   }
 }
 
-function operatorsForLevel(): Operator[] {
-  const base: Operator[] = ['+', '−', '×', '÷']
+function availableOperators(level: number): Operator[] {
+  const ops: Operator[] = ['+', '−']
+  if (level >= MULTIPLICATION_STARTS_AT_LEVEL) ops.push('×')
+  if (level >= DIVISION_STARTS_AT_LEVEL) ops.push('÷')
+  return ops
+}
+
+function operatorsForLevel(level: number): Operator[] {
+  const base = availableOperators(level)
   const ops: Operator[] = []
   while (ops.length < EXERCISES_PER_LEVEL) ops.push(...shuffle(base))
   return shuffle(ops.slice(0, EXERCISES_PER_LEVEL))
 }
 
 export function buildLevelExercises(level: number): MathExercise[] {
-  return operatorsForLevel().map((operator) => generateExercise(level, operator))
+  return operatorsForLevel(level).map((operator) => generateExercise(level, operator))
 }
