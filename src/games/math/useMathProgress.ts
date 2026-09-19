@@ -36,5 +36,10 @@ export function useMathProgress() {
     })
   }, [])
 
-  return { unlockedLevel, unlockUpTo }
+  const resetProgress = useCallback(() => {
+    setUnlockedLevel(1)
+    saveUnlockedLevel(1)
+  }, [])
+
+  return { unlockedLevel, unlockUpTo, resetProgress }
 }
