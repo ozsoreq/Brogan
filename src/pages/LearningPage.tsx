@@ -1,4 +1,4 @@
-import { Puzzle, Hash, Palette } from 'lucide-react'
+import { Puzzle, Hash, BookOpen } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { AppHeader } from '../components/AppHeader'
 import { ModuleCard } from '../components/ModuleCard'
@@ -26,11 +26,11 @@ export function LearningPage() {
           onClick={() => navigate('/learning/math')}
         />
         <ModuleCard
-          title="צבעים וצורות"
-          description="בקרוב..."
-          icon={Palette}
+          title="עברית"
+          description="50 שלבים של סיפורים ושאלות הבנת הנקרא"
+          icon={BookOpen}
           color="bg-amber-500"
-          comingSoon
+          onClick={() => navigate('/learning/hebrew')}
         />
       </main>
     </div>

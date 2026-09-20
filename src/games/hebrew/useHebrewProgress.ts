@@ -1,8 +1,8 @@
 import { useLevelProgress } from '../../lib/useLevelProgress'
 import { TOTAL_LEVELS } from './levels'
 
-const STORAGE_KEY = 'brogan-math-unlocked-level'
+const STORAGE_KEY = 'brogan-hebrew-unlocked-level'
 
-export function useMathProgress() {
+export function useHebrewProgress() {
   return useLevelProgress(STORAGE_KEY, TOTAL_LEVELS)
 }
