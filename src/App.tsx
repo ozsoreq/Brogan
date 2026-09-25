@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { HomePage } from './pages/HomePage'
 import { LearningPage } from './pages/LearningPage'
 import { GamesPage } from './pages/GamesPage'
@@ -19,6 +19,7 @@ function App() {
       <Route path="/learning/hebrew" element={<HebrewLevelSelect />} />
       <Route path="/learning/hebrew/:level" element={<HebrewGame />} />
       <Route path="/games" element={<GamesPage />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }

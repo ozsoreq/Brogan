@@ -37,6 +37,7 @@ export function ResultScreen({
           initial={{ scale: 0.5 }}
           animate={{ scale: 1 }}
           transition={{ type: 'spring', stiffness: 200, damping: 12, delay: 0.1 }}
+          dir="ltr"
           className="flex items-baseline justify-center gap-1 bg-gradient-to-br from-violet-600 to-fuchsia-500 bg-clip-text text-transparent"
         >
           <span className="text-7xl font-extrabold">{percentage}</span>

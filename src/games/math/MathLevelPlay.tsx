@@ -5,7 +5,8 @@ import { AppHeader } from '../../components/AppHeader'
 import { FeedbackOverlay } from '../../components/FeedbackOverlay'
 import { AnswerGrid } from './AnswerGrid'
 import { ExerciseDisplay } from './ExerciseDisplay'
-import { MathResultScreen } from './MathResultScreen'
+import { LevelResultScreen } from '../../components/LevelResultScreen'
+import { TOTAL_LEVELS } from './levels'
 import { useMathGame } from './useMathGame'
 
 interface MathLevelPlayProps {
@@ -40,10 +41,15 @@ export function MathLevelPlay({ level, unlockUpTo }: MathLevelPlayProps) {
 
       <main className="flex flex-1 flex-col items-center justify-center gap-8 px-4 py-8">
         {finished ? (
-          <MathResultScreen
+          <LevelResultScreen
             level={level}
+            totalLevels={TOTAL_LEVELS}
             score={score}
+            total={total}
+            itemLabel="תרגילים"
             passed={passed}
+            failHint="נסו שוב!"
+            retryButtonClass="bg-violet-600 hover:bg-violet-700"
             onRetry={restart}
             onNextLevel={() => navigate(`/learning/math/${level + 1}`)}
             onBackToLevels={() => navigate('/learning/math')}

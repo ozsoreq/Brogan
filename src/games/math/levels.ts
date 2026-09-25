@@ -97,5 +97,18 @@ function operatorsForLevel(level: number): Operator[] {
 }
 
 export function buildLevelExercises(level: number): MathExercise[] {
-  return operatorsForLevel(level).map((operator) => generateExercise(level, operator))
+  const seen = new Set<string>()
+  return operatorsForLevel(level).map((operator) => {
+    let exercise = generateExercise(level, operator)
+    // Low levels have a tiny number space, so cap retries rather than loop forever.
+    for (let attempt = 0; attempt < 30 && seen.has(exerciseKey(exercise)); attempt++) {
+      exercise = generateExercise(level, operator)
+    }
+    seen.add(exerciseKey(exercise))
+    return exercise
+  })
+}
+
+function exerciseKey(e: MathExercise): string {
+  return `${e.a}${e.operator}${e.b}`
 }

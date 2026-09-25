@@ -3,7 +3,8 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AppHeader } from '../../components/AppHeader'
 import { FeedbackOverlay } from '../../components/FeedbackOverlay'
-import { HebrewResultScreen } from './HebrewResultScreen'
+import { LevelResultScreen } from '../../components/LevelResultScreen'
+import { TOTAL_LEVELS } from './levels'
 import { QuestionPanel } from './QuestionPanel'
 import { StoryCard } from './StoryCard'
 import { useHebrewStoryGame } from './useHebrewStoryGame'
@@ -42,11 +43,15 @@ export function HebrewLevelPlay({ level, unlockUpTo }: HebrewLevelPlayProps) {
 
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center gap-6 px-4 py-6">
         {finished ? (
-          <HebrewResultScreen
+          <LevelResultScreen
             level={level}
+            totalLevels={TOTAL_LEVELS}
             score={score}
             total={total}
+            itemLabel="שאלות"
             passed={passed}
+            failHint="אפשר להסתכל שוב בסיפור!"
+            retryButtonClass="bg-amber-500 hover:bg-amber-600"
             onRetry={restart}
             onNextLevel={() => navigate(`/learning/hebrew/${level + 1}`)}
             onBackToLevels={() => navigate('/learning/hebrew')}

@@ -1,7 +1,8 @@
 import { useCallback, useState } from 'react'
 
+// unlockedLevel === totalLevels + 1 means every level has been completed.
 function clampLevel(level: number, totalLevels: number): number {
-  return Math.min(Math.max(Math.round(level), 1), totalLevels)
+  return Math.min(Math.max(Math.round(level), 1), totalLevels + 1)
 }
 
 function loadUnlockedLevel(storageKey: string, totalLevels: number): number {
