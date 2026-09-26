@@ -14,3 +14,16 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
+
+@keyframes runner-bob {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 -8%;
+  }
+}
+
+.runner-bob {
+  animation: runner-bob 0.16s ease-in-out infinite alternate;
+}
