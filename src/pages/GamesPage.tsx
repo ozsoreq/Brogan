@@ -1,4 +1,4 @@
-import { Brain, Sparkles } from 'lucide-react'
+import { Brain, Hammer } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { AppHeader } from '../components/AppHeader'
 import { ModuleCard } from '../components/ModuleCard'
@@ -18,7 +18,13 @@ export function GamesPage() {
           color="bg-fuchsia-500"
           onClick={() => navigate('/games/memory')}
         />
-        <ModuleCard title="משחק נוסף" description="בקרוב..." icon={Sparkles} color="bg-sky-500" comingSoon />
+        <ModuleCard
+          title="תפסו את האוגר!"
+          description="משחק תגובה מהירה · 3 רמות קושי"
+          icon={Hammer}
+          color="bg-orange-500"
+          onClick={() => navigate('/games/whack')}
+        />
       </main>
     </div>
   )

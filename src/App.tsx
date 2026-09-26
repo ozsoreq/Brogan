@@ -8,6 +8,7 @@ import { MathGame } from './games/math/MathGame'
 import { HebrewLevelSelect } from './games/hebrew/HebrewLevelSelect'
 import { HebrewGame } from './games/hebrew/HebrewGame'
 import { MemoryGame } from './games/memory/MemoryGame'
+import { WhackGame } from './games/whack/WhackGame'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
       <Route path="/learning/hebrew/:level" element={<HebrewGame />} />
       <Route path="/games" element={<GamesPage />} />
       <Route path="/games/memory" element={<MemoryGame />} />
+      <Route path="/games/whack" element={<WhackGame />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
