@@ -13,6 +13,7 @@ import { RunnerGame } from './games/runner/RunnerGame'
 import { FruitGame } from './games/fruit/FruitGame'
 import { SnakeGame } from './games/snake/SnakeGame'
 import { BricksGame } from './games/bricks/BricksGame'
+import { StackGame } from './games/stack/StackGame'
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
       <Route path="/games/fruit" element={<FruitGame />} />
       <Route path="/games/snake" element={<SnakeGame />} />
       <Route path="/games/bricks" element={<BricksGame />} />
+      <Route path="/games/stack" element={<StackGame />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
