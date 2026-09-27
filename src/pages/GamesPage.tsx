@@ -1,4 +1,4 @@
-import { Brain, BrickWall, Building2, Footprints, Hammer, Slice, Worm } from 'lucide-react'
+import { Brain, BrickWall, Building2, Footprints, Grid3x3, Hammer, Slice, Worm } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { AppHeader } from '../components/AppHeader'
 import { ModuleCard } from '../components/ModuleCard'
@@ -12,8 +12,15 @@ export function GamesPage() {
 
       <main className="mx-auto flex max-w-md flex-col gap-4 px-4 py-6">
         <ModuleCard
+          title="ארבע בשורה"
+          description="חדש! משחק חשיבה מול המחשב - סדרו ארבע דיסקיות ברצף · 3 רמות קושי"
+          icon={Grid3x3}
+          color="bg-blue-600"
+          onClick={() => navigate('/games/connect4')}
+        />
+        <ModuleCard
           title="בונים מגדל!"
-          description="חדש! מפילים בלוקים בדיוק ובונים מגדל עד השמיים · 3 רמות קושי"
+          description="מפילים בלוקים בדיוק ובונים מגדל עד השמיים · 3 רמות קושי"
           icon={Building2}
           color="bg-sky-600"
           onClick={() => navigate('/games/stack')}
