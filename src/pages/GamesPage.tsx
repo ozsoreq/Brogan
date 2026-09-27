@@ -1,4 +1,4 @@
-import { Brain, Footprints, Hammer } from 'lucide-react'
+import { Brain, Footprints, Hammer, Slice } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { AppHeader } from '../components/AppHeader'
 import { ModuleCard } from '../components/ModuleCard'
@@ -12,8 +12,15 @@ export function GamesPage() {
 
       <main className="mx-auto flex max-w-md flex-col gap-4 px-4 py-6">
         <ModuleCard
+          title="חותכים פירות!"
+          description="חדש! מחליקים את האצבע וחותכים פירות · 3 רמות קושי"
+          icon={Slice}
+          color="bg-rose-500"
+          onClick={() => navigate('/games/fruit')}
+        />
+        <ModuleCard
           title="רוץ, דינו, רוץ!"
-          description="חדש! נוגעים כדי לקפוץ מעל מכשולים ואוספים כוכבים"
+          description="נוגעים כדי לקפוץ מעל מכשולים ואוספים כוכבים"
           icon={Footprints}
           color="bg-sky-500"
           onClick={() => navigate('/games/runner')}
