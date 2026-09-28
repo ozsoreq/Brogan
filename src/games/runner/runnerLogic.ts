@@ -4,14 +4,60 @@ export const WORLD_HEIGHT = 56
 export const PLAYER_X = 12
 export const PLAYER_SIZE = 11
 
-const GRAVITY = 260 // units/s²
-const JUMP_VELOCITY = 110 // units/s -> ~23 units high, ~0.85s in the air
-const START_SPEED = 36 // units/s
-const MAX_SPEED = 72
-const ACCELERATION = 1.1 // speed gained per second
 const OBSTACLE_SIZE = 8
 const STAR_SIZE = 7
 export const STAR_BONUS = 5
+
+export type Difficulty = 'easy' | 'medium' | 'hard'
+
+export interface DifficultyConfig {
+  label: string
+  grades: string
+  detail: string
+  startSpeed: number // units/s
+  maxSpeed: number
+  acceleration: number // speed gained per second
+  gapSpread: number // extra random spacing between obstacles, in seconds of running
+  gravity: number // units/s²
+  jumpVelocity: number // units/s
+}
+
+export const DIFFICULTIES: Record<Difficulty, DifficultyConfig> = {
+  easy: {
+    label: 'קל',
+    grades: 'כיתות א׳-ב׳',
+    detail: 'רץ לאט 🐢',
+    startSpeed: 28,
+    maxSpeed: 50,
+    acceleration: 0.6,
+    gapSpread: 1.8,
+    // A floatier jump (~1s in the air) gives little kids more time to react.
+    gravity: 200,
+    jumpVelocity: 100,
+  },
+  medium: {
+    label: 'בינוני',
+    grades: 'כיתות ב׳-ג׳',
+    detail: 'מאיץ עם הזמן',
+    startSpeed: 36,
+    maxSpeed: 72,
+    acceleration: 1.1,
+    gapSpread: 1.4,
+    gravity: 260, // with jumpVelocity 110: ~23 units high, ~0.85s in the air
+    jumpVelocity: 110,
+  },
+  hard: {
+    label: 'קשה',
+    grades: 'כיתות ג׳-ד׳',
+    detail: 'מהיר מאוד 🚀',
+    startSpeed: 44,
+    maxSpeed: 90,
+    acceleration: 1.5,
+    gapSpread: 1.1,
+    gravity: 260,
+    jumpVelocity: 110,
+  },
+}
 
 export type ObstacleKind = 'cactus' | 'rock'
 
@@ -41,13 +87,13 @@ export interface RunnerState {
   over: boolean
 }
 
-export function initialState(): RunnerState {
+export function initialState(cfg: DifficultyConfig = DIFFICULTIES.medium): RunnerState {
   return {
     playerY: 0,
     playerVy: 0,
     obstacles: [],
     stars: [],
-    speed: START_SPEED,
+    speed: cfg.startSpeed,
     distance: 0,
     starsCollected: 0,
     nextObstacleIn: 45,
@@ -65,9 +111,9 @@ export const isGrounded = (state: RunnerState) => state.playerY <= 0 && state.pl
 
 // Gap between obstacles, in units: always at least one full jump's width of
 // clear ground so two obstacles can never force an impossible double jump.
-function obstacleGap(speed: number, rng: () => number): number {
-  const airDistance = ((2 * JUMP_VELOCITY) / GRAVITY) * speed
-  return airDistance * 1.35 + rng() * speed * 1.4
+function obstacleGap(speed: number, rng: () => number, cfg: DifficultyConfig): number {
+  const airDistance = ((2 * cfg.jumpVelocity) / cfg.gravity) * speed
+  return airDistance * 1.35 + rng() * speed * cfg.gapSpread
 }
 
 interface Box {
@@ -93,14 +139,20 @@ function starBox(s: Star): Box {
   return { left: s.x, right: s.x + STAR_SIZE, bottom: s.y, top: s.y + STAR_SIZE }
 }
 
-export function step(state: RunnerState, dtSeconds: number, jump: boolean, rng = Math.random): RunnerState {
+export function step(
+  state: RunnerState,
+  dtSeconds: number,
+  jump: boolean,
+  rng = Math.random,
+  cfg: DifficultyConfig = DIFFICULTIES.medium,
+): RunnerState {
   if (state.over) return state
   const dt = Math.min(dtSeconds, 0.05)
 
   let { playerY, playerVy, nextObstacleIn, nextStarIn, nextId, starsCollected } = state
-  if (jump && isGrounded(state)) playerVy = JUMP_VELOCITY
+  if (jump && isGrounded(state)) playerVy = cfg.jumpVelocity
 
-  playerVy -= GRAVITY * dt
+  playerVy -= cfg.gravity * dt
   playerY += playerVy * dt
   if (playerY <= 0) {
     playerY = 0
@@ -114,7 +166,7 @@ export function step(state: RunnerState, dtSeconds: number, jump: boolean, rng =
   nextObstacleIn -= move
   if (nextObstacleIn <= 0) {
     obstacles.push({ id: nextId++, x: WORLD_WIDTH + 2, kind: rng() < 0.35 ? 'rock' : 'cactus' })
-    nextObstacleIn = obstacleGap(state.speed, rng)
+    nextObstacleIn = obstacleGap(state.speed, rng, cfg)
   }
 
   nextStarIn -= move
@@ -135,7 +187,7 @@ export function step(state: RunnerState, dtSeconds: number, jump: boolean, rng =
     playerVy,
     obstacles,
     stars,
-    speed: Math.min(MAX_SPEED, state.speed + ACCELERATION * dt),
+    speed: Math.min(cfg.maxSpeed, state.speed + cfg.acceleration * dt),
     distance: state.distance + move,
     starsCollected,
     nextObstacleIn,

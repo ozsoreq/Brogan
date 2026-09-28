@@ -1,50 +1,69 @@
+import { lazy, Suspense, type ComponentType } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { ErrorBoundary } from './components/ErrorBoundary'
 import { RotateHint } from './components/RotateHint'
 import { HomePage } from './pages/HomePage'
-import { LearningPage } from './pages/LearningPage'
-import { GamesPage } from './pages/GamesPage'
-import { CompleteWordGame } from './games/completeWord/CompleteWordGame'
-import { MathLevelSelect } from './games/math/MathLevelSelect'
-import { MathGame } from './games/math/MathGame'
-import { HebrewLevelSelect } from './games/hebrew/HebrewLevelSelect'
-import { HebrewGame } from './games/hebrew/HebrewGame'
-import { MemoryGame } from './games/memory/MemoryGame'
-import { WhackGame } from './games/whack/WhackGame'
-import { RunnerGame } from './games/runner/RunnerGame'
-import { FruitGame } from './games/fruit/FruitGame'
-import { SnakeGame } from './games/snake/SnakeGame'
-import { BricksGame } from './games/bricks/BricksGame'
-import { StackGame } from './games/stack/StackGame'
-import { Connect4Game } from './games/connect4/Connect4Game'
-import { MazeGame } from './games/maze/MazeGame'
+
+// Every screen except home loads on demand, so the first screen appears fast
+// on slow phones and networks.
+function page<M>(load: () => Promise<M>, name: keyof M) {
+  return lazy(async () => ({ default: (await load())[name] as ComponentType }))
+}
+
+const LearningPage = page(() => import('./pages/LearningPage'), 'LearningPage')
+const GamesPage = page(() => import('./pages/GamesPage'), 'GamesPage')
+const CompleteWordGame = page(() => import('./games/completeWord/CompleteWordGame'), 'CompleteWordGame')
+const MathLevelSelect = page(() => import('./games/math/MathLevelSelect'), 'MathLevelSelect')
+const MathGame = page(() => import('./games/math/MathGame'), 'MathGame')
+const HebrewLevelSelect = page(() => import('./games/hebrew/HebrewLevelSelect'), 'HebrewLevelSelect')
+const HebrewGame = page(() => import('./games/hebrew/HebrewGame'), 'HebrewGame')
+const MemoryGame = page(() => import('./games/memory/MemoryGame'), 'MemoryGame')
+const WhackGame = page(() => import('./games/whack/WhackGame'), 'WhackGame')
+const RunnerGame = page(() => import('./games/runner/RunnerGame'), 'RunnerGame')
+const FruitGame = page(() => import('./games/fruit/FruitGame'), 'FruitGame')
+const SnakeGame = page(() => import('./games/snake/SnakeGame'), 'SnakeGame')
+const BricksGame = page(() => import('./games/bricks/BricksGame'), 'BricksGame')
+const StackGame = page(() => import('./games/stack/StackGame'), 'StackGame')
+const Connect4Game = page(() => import('./games/connect4/Connect4Game'), 'Connect4Game')
+const MazeGame = page(() => import('./games/maze/MazeGame'), 'MazeGame')
+
+function Loading() {
+  return (
+    <div className="flex min-h-screen items-center justify-center" role="status" aria-label="טוען">
+      <span className="h-10 w-10 animate-spin rounded-full border-4 border-violet-200 border-t-violet-600" />
+    </div>
+  )
+}
 
 function App() {
   const { pathname } = useLocation()
 
   return (
-    <>
+    <ErrorBoundary resetKey={pathname}>
       {pathname.startsWith('/games/') && <RotateHint />}
-      <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/learning" element={<LearningPage />} />
-      <Route path="/learning/complete-word" element={<CompleteWordGame />} />
-      <Route path="/learning/math" element={<MathLevelSelect />} />
-      <Route path="/learning/math/:level" element={<MathGame />} />
-      <Route path="/learning/hebrew" element={<HebrewLevelSelect />} />
-      <Route path="/learning/hebrew/:level" element={<HebrewGame />} />
-      <Route path="/games" element={<GamesPage />} />
-      <Route path="/games/memory" element={<MemoryGame />} />
-      <Route path="/games/whack" element={<WhackGame />} />
-      <Route path="/games/runner" element={<RunnerGame />} />
-      <Route path="/games/fruit" element={<FruitGame />} />
-      <Route path="/games/snake" element={<SnakeGame />} />
-      <Route path="/games/bricks" element={<BricksGame />} />
-      <Route path="/games/stack" element={<StackGame />} />
-      <Route path="/games/connect4" element={<Connect4Game />} />
-      <Route path="/games/maze" element={<MazeGame />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </>
+      <Suspense fallback={<Loading />}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/learning" element={<LearningPage />} />
+          <Route path="/learning/complete-word" element={<CompleteWordGame />} />
+          <Route path="/learning/math" element={<MathLevelSelect />} />
+          <Route path="/learning/math/:level" element={<MathGame />} />
+          <Route path="/learning/hebrew" element={<HebrewLevelSelect />} />
+          <Route path="/learning/hebrew/:level" element={<HebrewGame />} />
+          <Route path="/games" element={<GamesPage />} />
+          <Route path="/games/memory/:choice?" element={<MemoryGame />} />
+          <Route path="/games/whack/:choice?" element={<WhackGame />} />
+          <Route path="/games/runner/:choice?" element={<RunnerGame />} />
+          <Route path="/games/fruit/:choice?" element={<FruitGame />} />
+          <Route path="/games/snake/:choice?" element={<SnakeGame />} />
+          <Route path="/games/bricks/:choice?" element={<BricksGame />} />
+          <Route path="/games/stack/:choice?" element={<StackGame />} />
+          <Route path="/games/connect4/:choice?" element={<Connect4Game />} />
+          <Route path="/games/maze/:choice?" element={<MazeGame />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
+    </ErrorBoundary>
   )
 }
 

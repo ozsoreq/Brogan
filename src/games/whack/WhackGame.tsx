@@ -1,7 +1,8 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AppHeader } from '../../components/AppHeader'
 import { DifficultyPicker } from '../../components/DifficultyPicker'
+import { DIFFICULTY_KEYS } from '../../lib/difficulty'
+import { useRouteChoice } from '../../lib/useRouteChoice'
 import { DIFFICULTIES, ROUND_SECONDS, type Difficulty } from './whackLogic'
 import { WhackBoard } from './WhackBoard'
 
@@ -13,18 +14,18 @@ const LEVELS = {
 
 export function WhackGame() {
   const navigate = useNavigate()
-  const [difficulty, setDifficulty] = useState<Difficulty | null>(null)
+  const [difficulty, setDifficulty, clearDifficulty] = useRouteChoice<Difficulty>('/games/whack', DIFFICULTY_KEYS)
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-orange-50 via-white to-lime-50">
       <AppHeader
         title="תפסו את האוגר!"
-        onBack={() => (difficulty ? setDifficulty(null) : navigate('/games'))}
+        onBack={() => (difficulty ? clearDifficulty() : navigate('/games'))}
       />
 
       <main className="flex flex-1 flex-col items-center gap-6 px-4 py-6">
         {difficulty ? (
-          <WhackBoard key={difficulty} difficulty={difficulty} onChangeDifficulty={() => setDifficulty(null)} />
+          <WhackBoard key={difficulty} difficulty={difficulty} onChangeDifficulty={() => clearDifficulty()} />
         ) : (
           <DifficultyPicker
             intro={`יש לכם ${ROUND_SECONDS} שניות לתפוס כמה שיותר אוגרים 🐹. ברמות הקשות - היזהרו מהפצצות!`}

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
-import { RotateCcw, Users } from 'lucide-react'
-import { PLAYER_SIZE, PLAYER_X, STAR_BONUS, WORLD_HEIGHT, type ObstacleKind } from './runnerLogic'
+import { RotateCcw, SlidersHorizontal } from 'lucide-react'
+import { PLAYER_SIZE, PLAYER_X, STAR_BONUS, WORLD_HEIGHT, type Difficulty, type ObstacleKind } from './runnerLogic'
 import { useRunnerGame } from './useRunnerGame'
 import { fitBoard } from '../../lib/fitBoard'
 
@@ -19,11 +19,12 @@ const bottomPct = (y: number) => GROUND_PCT + (y / BOX_HEIGHT_UNITS) * 100
 
 interface RunnerBoardProps {
   character: string
-  onChangeCharacter: () => void
+  difficulty: Difficulty
+  onChangeDifficulty: () => void
 }
 
-export function RunnerBoard({ character, onChangeCharacter }: RunnerBoardProps) {
-  const { state, phase, score, best, isNewRecord, press, restart } = useRunnerGame()
+export function RunnerBoard({ character, difficulty, onChangeDifficulty }: RunnerBoardProps) {
+  const { cfg, state, phase, score, best, isNewRecord, press, restart } = useRunnerGame(difficulty)
   const grounded = state.playerY <= 0
 
   return (
@@ -132,9 +133,9 @@ export function RunnerBoard({ character, onChangeCharacter }: RunnerBoardProps) 
           <p className="text-5xl font-extrabold text-sky-600">{score}</p>
           <p className="text-slate-600">אספת {state.starsCollected} כוכבים ⭐ (כל כוכב שווה {STAR_BONUS} נקודות)</p>
           {isNewRecord ? (
-            <p className="rounded-full bg-amber-100 px-4 py-1 font-semibold text-amber-700">🏅 שיא חדש!</p>
+            <p className="rounded-full bg-amber-100 px-4 py-1 font-semibold text-amber-700">🏅 שיא חדש ברמה {cfg.label}!</p>
           ) : (
-            best !== null && <p className="text-sm text-slate-500">השיא שלך: {best}</p>
+            best !== null && <p className="text-sm text-slate-500">השיא שלך ברמה {cfg.label}: {best}</p>
           )}
           <div className="flex w-full flex-col gap-3">
             <button
@@ -147,11 +148,11 @@ export function RunnerBoard({ character, onChangeCharacter }: RunnerBoardProps) 
             </button>
             <button
               type="button"
-              onClick={onChangeCharacter}
+              onClick={onChangeDifficulty}
               className="flex items-center justify-center gap-2 rounded-2xl bg-slate-100 px-6 py-3 font-semibold text-slate-700 transition hover:bg-slate-200 active:scale-95"
             >
-              <Users className="h-5 w-5" aria-hidden />
-              החלפת דמות
+              <SlidersHorizontal className="h-5 w-5" aria-hidden />
+              בחירת רמה ודמות
             </button>
           </div>
         </motion.div>

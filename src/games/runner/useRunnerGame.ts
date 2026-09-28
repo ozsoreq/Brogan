@@ -1,15 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { initialState, isGrounded, score, step } from './runnerLogic'
+import { DIFFICULTIES, initialState, isGrounded, score, step, type Difficulty } from './runnerLogic'
 
 // A tap slightly before landing still counts, so jumps don't feel "eaten".
 const JUMP_BUFFER_MS = 150
-const BEST_KEY = 'brogan-runner-best'
 
 export type Phase = 'ready' | 'playing' | 'over'
 
-function loadBest(): number | null {
+function bestKey(difficulty: Difficulty) {
+  return `brogan-runner-best-${difficulty}`
+}
+
+function loadBest(difficulty: Difficulty): number | null {
   try {
-    const raw = localStorage.getItem(BEST_KEY)
+    const raw = localStorage.getItem(bestKey(difficulty))
     const n = raw === null ? NaN : Number(raw)
     return Number.isFinite(n) ? n : null
   } catch {
@@ -17,10 +20,11 @@ function loadBest(): number | null {
   }
 }
 
-export function useRunnerGame() {
-  const [state, setState] = useState(initialState)
+export function useRunnerGame(difficulty: Difficulty) {
+  const cfg = DIFFICULTIES[difficulty]
+  const [state, setState] = useState(() => initialState(cfg))
   const [phase, setPhase] = useState<Phase>('ready')
-  const [bestAtStart, setBestAtStart] = useState(loadBest)
+  const [bestAtStart, setBestAtStart] = useState(() => loadBest(difficulty))
   const stateRef = useRef(state)
   const jumpRequestedAt = useRef(-Infinity)
 
@@ -33,7 +37,7 @@ export function useRunnerGame() {
       last = now
       const prev = stateRef.current
       const wantsJump = now - jumpRequestedAt.current < JUMP_BUFFER_MS
-      const next = step(prev, dt, wantsJump)
+      const next = step(prev, dt, wantsJump, Math.random, cfg)
       if (wantsJump && isGrounded(prev) && !isGrounded(next)) jumpRequestedAt.current = -Infinity
       stateRef.current = next
       setState(next)
@@ -45,7 +49,7 @@ export function useRunnerGame() {
     }
     frame = requestAnimationFrame(loop)
     return () => cancelAnimationFrame(frame)
-  }, [phase])
+  }, [phase, cfg])
 
   const finalScore = score(state)
   const isNewRecord = phase === 'over' && finalScore > 0 && (bestAtStart === null || finalScore > bestAtStart)
@@ -54,20 +58,20 @@ export function useRunnerGame() {
   useEffect(() => {
     if (!isNewRecord) return
     try {
-      localStorage.setItem(BEST_KEY, String(finalScore))
+      localStorage.setItem(bestKey(difficulty), String(finalScore))
     } catch {
       // storage unavailable - record just isn't kept
     }
-  }, [isNewRecord, finalScore])
+  }, [isNewRecord, finalScore, difficulty])
 
   const start = useCallback(() => {
-    const fresh = initialState()
+    const fresh = initialState(cfg)
     stateRef.current = fresh
     jumpRequestedAt.current = -Infinity
     setState(fresh)
-    setBestAtStart(loadBest())
+    setBestAtStart(loadBest(difficulty))
     setPhase('playing')
-  }, [])
+  }, [cfg, difficulty])
 
   // One control for everything: tap to start, tap to jump.
   const press = useCallback(() => {
@@ -86,5 +90,5 @@ export function useRunnerGame() {
     return () => window.removeEventListener('keydown', onKey)
   }, [press])
 
-  return { state, phase, score: finalScore, best, isNewRecord, press, restart: start }
+  return { cfg, state, phase, score: finalScore, best, isNewRecord, press, restart: start }
 }

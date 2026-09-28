@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
-
-export type DifficultyKey = 'easy' | 'medium' | 'hard'
+import type { DifficultyKey } from '../lib/difficulty'
 
 const LEVEL_COLORS: Record<DifficultyKey, string> = {
   easy: 'from-emerald-400 to-teal-500',

@@ -1,11 +1,16 @@
 import { describe, expect, it } from 'vitest'
-import { initialState, isGrounded, PLAYER_X, score, STAR_BONUS, step, type RunnerState } from './runnerLogic'
+import { DIFFICULTIES, initialState, isGrounded, PLAYER_X, score, STAR_BONUS, step, type DifficultyConfig, type RunnerState } from './runnerLogic'
 
 const DT = 1 / 60
 
-function run(state: RunnerState, seconds: number, jumpWhen: (s: RunnerState) => boolean = () => false) {
+function run(
+  state: RunnerState,
+  seconds: number,
+  jumpWhen: (s: RunnerState) => boolean = () => false,
+  cfg: DifficultyConfig = DIFFICULTIES.medium,
+) {
   let s = state
-  for (let t = 0; t < seconds && !s.over; t += DT) s = step(s, DT, jumpWhen(s))
+  for (let t = 0; t < seconds && !s.over; t += DT) s = step(s, DT, jumpWhen(s), Math.random, cfg)
   return s
 }
 
@@ -38,18 +43,30 @@ describe('obstacles', () => {
     expect(run(initialState(), 20).over).toBe(true)
   })
 
-  it('a well-timed jumper survives a long run (every obstacle is jumpable)', () => {
-    for (let trial = 0; trial < 20; trial++) {
-      const s = run(initialState(), 90, autopilot)
-      expect(s.over).toBe(false)
-      expect(s.distance).toBeGreaterThan(3000)
+  it('a well-timed jumper survives a long run on every level (every obstacle is jumpable)', () => {
+    for (const cfg of Object.values(DIFFICULTIES)) {
+      for (let trial = 0; trial < 10; trial++) {
+        const s = run(initialState(cfg), 90, autopilot, cfg)
+        expect(s.over).toBe(false)
+        expect(s.distance).toBeGreaterThan(2000)
+      }
     }
   })
 
   it('speeds up over time but stays capped', () => {
-    const s = run(initialState(), 120, autopilot)
-    expect(s.speed).toBeGreaterThan(initialState().speed)
-    expect(s.speed).toBeLessThanOrEqual(72)
+    for (const cfg of Object.values(DIFFICULTIES)) {
+      const s = run(initialState(cfg), 120, autopilot, cfg)
+      expect(s.speed).toBeGreaterThan(cfg.startSpeed)
+      expect(s.speed).toBeLessThanOrEqual(cfg.maxSpeed)
+    }
+  })
+
+  it('easy is slower than medium, which is slower than hard', () => {
+    const { easy, medium, hard } = DIFFICULTIES
+    expect(easy.startSpeed).toBeLessThan(medium.startSpeed)
+    expect(medium.startSpeed).toBeLessThan(hard.startSpeed)
+    expect(easy.maxSpeed).toBeLessThan(medium.maxSpeed)
+    expect(medium.maxSpeed).toBeLessThan(hard.maxSpeed)
   })
 })
 
@@ -75,8 +92,9 @@ describe('score', () => {
 })
 
 describe('fairness for young kids', () => {
-  it('gives at least 0.4s to time a jump at the starting speed', () => {
-    const start = initialState()
+  // Seconds of lead time in which a jump clears an obstacle, at a level's start speed.
+  function jumpWindow(cfg: DifficultyConfig) {
+    const start = initialState(cfg)
     let survivable = 0
     for (let lead = 0; lead <= 60; lead += 0.25) {
       let s: RunnerState = {
@@ -85,10 +103,16 @@ describe('fairness for young kids', () => {
         nextObstacleIn: 1e9,
         nextStarIn: 1e9,
       }
-      s = step(s, DT, true)
-      s = run(s, 2)
+      s = step(s, DT, true, Math.random, cfg)
+      s = run(s, 2, () => false, cfg)
       if (!s.over) survivable += 0.25
     }
-    expect(survivable / start.speed).toBeGreaterThanOrEqual(0.4)
+    return survivable / start.speed
+  }
+
+  it('gives young kids a generous jump window on easy, and a fair one on every level', () => {
+    expect(jumpWindow(DIFFICULTIES.easy)).toBeGreaterThanOrEqual(0.5)
+    expect(jumpWindow(DIFFICULTIES.medium)).toBeGreaterThanOrEqual(0.4)
+    expect(jumpWindow(DIFFICULTIES.hard)).toBeGreaterThanOrEqual(0.3)
   })
 })
