@@ -15,6 +15,7 @@ import { SnakeGame } from './games/snake/SnakeGame'
 import { BricksGame } from './games/bricks/BricksGame'
 import { StackGame } from './games/stack/StackGame'
 import { Connect4Game } from './games/connect4/Connect4Game'
+import { MazeGame } from './games/maze/MazeGame'
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
       <Route path="/games/bricks" element={<BricksGame />} />
       <Route path="/games/stack" element={<StackGame />} />
       <Route path="/games/connect4" element={<Connect4Game />} />
+      <Route path="/games/maze" element={<MazeGame />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )

@@ -1,35 +1,17 @@
 import { motion } from 'framer-motion'
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, RotateCcw, SlidersHorizontal } from 'lucide-react'
-import { useRef, type ReactNode } from 'react'
-import { BONUS_POINTS, type Difficulty, type Direction } from './snakeLogic'
+import { RotateCcw, SlidersHorizontal } from 'lucide-react'
+import { DirectionPad } from '../../components/DirectionPad'
+import { useSwipe } from '../../lib/useSwipe'
+import { BONUS_POINTS, type Difficulty } from './snakeLogic'
 import { useSnakeGame } from './useSnakeGame'
-
-const SWIPE_MIN_PX = 24
 
 interface SnakeBoardProps {
   difficulty: Difficulty
   onChangeDifficulty: () => void
 }
 
-function ArrowButton({ label, onPress, children }: { label: string; onPress: () => void; children: ReactNode }) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      onPointerDown={(e) => {
-        e.preventDefault()
-        onPress()
-      }}
-      className="flex h-16 w-16 touch-manipulation select-none items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-md active:scale-90 active:bg-emerald-600"
-    >
-      {children}
-    </button>
-  )
-}
-
 export function SnakeBoard({ difficulty, onChangeDifficulty }: SnakeBoardProps) {
   const { cfg, state, phase, best, isNewRecord, steer, restart } = useSnakeGame(difficulty)
-  const swipeStart = useRef<{ x: number; y: number } | null>(null)
   const cell = 100 / state.size
   const pos = (p: { x: number; y: number }) => ({
     left: `${p.x * cell}%`,
@@ -38,18 +20,7 @@ export function SnakeBoard({ difficulty, onChangeDifficulty }: SnakeBoardProps) 
     height: `${cell}%`,
   })
 
-  // Every swipe of at least SWIPE_MIN_PX counts; the start point then resets
-  // so one long drag can steer through several turns.
-  const onSwipeMove = (x: number, y: number) => {
-    const s = swipeStart.current
-    if (!s) return
-    const dx = x - s.x
-    const dy = y - s.y
-    if (Math.max(Math.abs(dx), Math.abs(dy)) < SWIPE_MIN_PX) return
-    const dir: Direction = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : dy > 0 ? 'down' : 'up'
-    steer(dir)
-    swipeStart.current = { x, y }
-  }
+  const swipe = useSwipe(steer)
 
   const headDir = state.dir
   const eyeRotation = { right: 0, down: 90, left: 180, up: 270 }[headDir]
@@ -65,13 +36,7 @@ export function SnakeBoard({ difficulty, onChangeDifficulty }: SnakeBoardProps) 
       <div
         role="application"
         aria-label="לוח המשחק - החליקו כדי לכוון את הנחש"
-        onPointerDown={(e) => {
-          e.currentTarget.setPointerCapture(e.pointerId)
-          swipeStart.current = { x: e.clientX, y: e.clientY }
-        }}
-        onPointerMove={(e) => onSwipeMove(e.clientX, e.clientY)}
-        onPointerUp={() => (swipeStart.current = null)}
-        onPointerCancel={() => (swipeStart.current = null)}
+        {...swipe}
         dir="ltr"
         className="relative aspect-square w-full select-none overflow-hidden rounded-3xl border-4 border-emerald-700 shadow-lg"
         style={{
@@ -176,25 +141,7 @@ export function SnakeBoard({ difficulty, onChangeDifficulty }: SnakeBoardProps) 
           </div>
         </motion.div>
       ) : (
-        <div dir="ltr" className="grid grid-cols-3 place-items-center gap-2 self-center">
-          <span />
-          <ArrowButton label="למעלה" onPress={() => steer('up')}>
-            <ArrowUp className="h-8 w-8" />
-          </ArrowButton>
-          <span />
-          <ArrowButton label="שמאלה" onPress={() => steer('left')}>
-            <ArrowLeft className="h-8 w-8" />
-          </ArrowButton>
-          <span />
-          <ArrowButton label="ימינה" onPress={() => steer('right')}>
-            <ArrowRight className="h-8 w-8" />
-          </ArrowButton>
-          <span />
-          <ArrowButton label="למטה" onPress={() => steer('down')}>
-            <ArrowDown className="h-8 w-8" />
-          </ArrowButton>
-          <span />
-        </div>
+        <DirectionPad onPress={steer} color="bg-emerald-500 active:bg-emerald-600" />
       )}
     </div>
   )
