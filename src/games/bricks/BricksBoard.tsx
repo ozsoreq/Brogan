@@ -161,12 +161,12 @@ export function BricksBoard({ difficulty, onChangeDifficulty }: BricksBoardProps
           <p className="text-2xl font-extrabold text-slate-800">נגמרו הלבבות!</p>
           <p className="text-5xl font-extrabold text-indigo-600">{state.score}</p>
           <p className="text-slate-600">
-            שברת {state.broken} לבנים 🧱 והגעת לשלב {state.stage} · כוכב ⭐ שווה {STAR_POINTS} נקודות
+            שברתם {state.broken} לבנים 🧱 והגעתם לשלב {state.stage} · כוכב ⭐ שווה {STAR_POINTS} נקודות
           </p>
           {isNewRecord ? (
             <p className="rounded-full bg-amber-100 px-4 py-1 font-semibold text-amber-700">🏅 שיא חדש ברמה {cfg.label}!</p>
           ) : (
-            best !== null && <p className="text-sm text-slate-500">השיא שלך ברמה {cfg.label}: {best}</p>
+            best !== null && <p className="text-sm text-slate-500">השיא שלכם ברמה {cfg.label}: {best}</p>
           )}
           <div className="flex w-full flex-col gap-3">
             <button
@@ -175,7 +175,7 @@ export function BricksBoard({ difficulty, onChangeDifficulty }: BricksBoardProps
               className="flex items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-6 py-3 font-semibold text-white shadow-md transition hover:bg-indigo-700 active:scale-95"
             >
               <RotateCcw className="h-5 w-5" aria-hidden />
-              שחק שוב
+              שחקו שוב
             </button>
             <button
               type="button"

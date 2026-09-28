@@ -11,7 +11,7 @@ interface ResultScreenProps {
 function getMessage(percentage: number): { text: string; emoji: string } {
   if (percentage === 100) return { text: 'מושלם! כל הכבוד!', emoji: '🏆' }
   if (percentage >= 70) return { text: 'כל הכבוד, עבודה נהדרת!', emoji: '🌟' }
-  if (percentage >= 40) return { text: 'התחלה יפה, בואו ננסה שוב!', emoji: '💪' }
+  if (percentage >= 40) return { text: 'התחלה יפה, בואו ננסו שוב!', emoji: '💪' }
   return { text: 'אל דאגה, תרגול עושה מושלם!', emoji: '🙂' }
 }
 
@@ -32,7 +32,7 @@ export function ResultScreen({
     >
       <div className="text-6xl">{message.emoji}</div>
       <div>
-        <p className="text-lg font-medium text-slate-500">הציון שלך</p>
+        <p className="text-lg font-medium text-slate-500">הציון שלכם</p>
         <motion.p
           initial={{ scale: 0.5 }}
           animate={{ scale: 1 }}
@@ -45,7 +45,7 @@ export function ResultScreen({
         </motion.p>
       </div>
       <p className="text-slate-600">
-        ענית נכון על {score} מתוך {total} מילים
+        עניתם נכון על {score} מתוך {total} מילים
       </p>
       <p className="font-semibold text-slate-800">{message.text}</p>
 
@@ -56,7 +56,7 @@ export function ResultScreen({
           className="flex items-center justify-center gap-2 rounded-2xl bg-violet-600 px-6 py-3 font-semibold text-white shadow-md transition hover:bg-violet-700 active:scale-95"
         >
           <RotateCcw className="h-5 w-5" />
-          שחק שוב
+          שחקו שוב
         </button>
         <button
           type="button"

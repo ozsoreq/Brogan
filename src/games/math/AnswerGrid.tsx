@@ -28,9 +28,9 @@ export function AnswerGrid({
           'bg-white text-slate-700 shadow-sm hover:bg-violet-50 hover:shadow-md'
         if (feedback) {
           if (isSelected && feedback === 'correct') {
-            tileStyle = 'bg-emerald-500 text-white shadow-md'
+            tileStyle = 'bg-emerald-600 text-white shadow-md'
           } else if (isSelected && feedback === 'wrong') {
-            tileStyle = 'bg-rose-500 text-white shadow-md'
+            tileStyle = 'bg-rose-600 text-white shadow-md'
           } else if (revealCorrect) {
             tileStyle = 'bg-emerald-100 text-emerald-700 ring-2 ring-emerald-400'
           } else {

@@ -32,10 +32,10 @@ export function LevelResultScreen({
   const hasNextLevel = passed && !isFinalLevel
 
   let emoji = '💪'
-  let headline = 'כמעט הצלחת!'
+  let headline = 'כמעט הצלחתם!'
   if (passed) {
     emoji = isFinalLevel ? '🏆' : '🎉'
-    headline = isFinalLevel ? 'סיימת את כל השלבים! אלופים!' : 'עברת את השלב!'
+    headline = isFinalLevel ? 'סיימתם את כל השלבים! אלופים!' : 'עברתם את השלב!'
   }
 
   return (
@@ -52,7 +52,7 @@ export function LevelResultScreen({
         <p className="mt-1 text-2xl font-extrabold text-slate-800">{headline}</p>
       </div>
       <p className="text-slate-600">
-        ענית נכון על {score} מתוך {total} {itemLabel}
+        עניתם נכון על {score} מתוך {total} {itemLabel}
       </p>
       {!passed && (
         <p className="font-semibold text-slate-800">
@@ -65,7 +65,7 @@ export function LevelResultScreen({
           <button
             type="button"
             onClick={onNextLevel}
-            className="flex items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-6 py-3 font-semibold text-white shadow-md transition hover:bg-emerald-600 active:scale-95"
+            className="flex items-center justify-center gap-2 rounded-2xl bg-emerald-700 px-6 py-3 font-semibold text-white shadow-md transition hover:bg-emerald-800 active:scale-95"
           >
             <ArrowLeft className="h-5 w-5" aria-hidden />
             שלב {level + 1}
@@ -77,7 +77,7 @@ export function LevelResultScreen({
           className={`flex items-center justify-center gap-2 rounded-2xl px-6 py-3 font-semibold text-white shadow-md transition active:scale-95 ${retryButtonClass}`}
         >
           <RotateCcw className="h-5 w-5" aria-hidden />
-          נסה שוב
+          נסו שוב
         </button>
         <button
           type="button"

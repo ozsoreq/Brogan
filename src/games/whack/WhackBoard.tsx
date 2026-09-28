@@ -30,13 +30,13 @@ export function WhackBoard({ difficulty, onChangeDifficulty }: WhackBoardProps) 
         <p className="text-2xl font-extrabold text-slate-800">נגמר הזמן!</p>
         <p className="text-5xl font-extrabold text-orange-500">{score}</p>
         <p className="text-slate-600">
-          תפסת {hits} אוגרים
-          {cfg.bombChance > 0 && ` · נגעת ב-${bombsHit} פצצות`}
+          תפסתם {hits} אוגרים
+          {cfg.bombChance > 0 && ` · נגעתם ב-${bombsHit} פצצות`}
         </p>
         {isNewRecord ? (
           <p className="rounded-full bg-amber-100 px-4 py-1 font-semibold text-amber-700">🏅 שיא חדש ברמה {cfg.label}!</p>
         ) : (
-          best !== null && <p className="text-sm text-slate-500">השיא שלך ברמה {cfg.label}: {best}</p>
+          best !== null && <p className="text-sm text-slate-500">השיא שלכם ברמה {cfg.label}: {best}</p>
         )}
         <div className="mt-2 flex w-full flex-col gap-3">
           <button
@@ -45,7 +45,7 @@ export function WhackBoard({ difficulty, onChangeDifficulty }: WhackBoardProps) 
             className="flex items-center justify-center gap-2 rounded-2xl bg-orange-500 px-6 py-3 font-semibold text-white shadow-md transition hover:bg-orange-600 active:scale-95"
           >
             <RotateCcw className="h-5 w-5" aria-hidden />
-            שחק שוב
+            שחקו שוב
           </button>
           <button
             type="button"
@@ -109,8 +109,8 @@ export function WhackBoard({ difficulty, onChangeDifficulty }: WhackBoardProps) 
       </div>
 
       <p className="text-center text-sm text-slate-500">
-        גע באוגר 🐹 כשהוא יוצא
-        {cfg.bombChance > 0 && ` · אל תיגע בפצצה 💣 (מינוס ${BOMB_PENALTY})`}
+        געו באוגר 🐹 כשהוא יוצא
+        {cfg.bombChance > 0 && ` · אל תיגעו בפצצה 💣 (מינוס ${BOMB_PENALTY})`}
       </p>
 
       <AnimatePresence>

@@ -1,7 +1,6 @@
 // World units: 100 wide, y grows upwards from the ground. Block n sits at y = n * BLOCK_HEIGHT.
 export const WORLD_WIDTH = 100
 export const BLOCK_HEIGHT = 8
-export const SLIDE_MARGIN = 8
 export const PERFECT_POINTS = 2
 export const GROW_AFTER_STREAK = 3
 export const GROW_BY = 4
@@ -18,6 +17,8 @@ export interface DifficultyConfig {
   speedUp: number
   maxSpeed: number
   tolerance: number
+  /** How far past each edge the block slides, as a fraction of its width. */
+  overshoot: number
 }
 
 export const DIFFICULTIES: Record<Difficulty, DifficultyConfig> = {
@@ -30,6 +31,8 @@ export const DIFFICULTIES: Record<Difficulty, DifficultyConfig> = {
     speedUp: 0.6,
     maxSpeed: 55,
     tolerance: 4,
+    // A short slide range: a full-width block can't miss the tower entirely.
+    overshoot: 0.12,
   },
   medium: {
     label: 'בינוני',
@@ -40,6 +43,8 @@ export const DIFFICULTIES: Record<Difficulty, DifficultyConfig> = {
     speedUp: 1.2,
     maxSpeed: 80,
     tolerance: 3,
+    // Long enough to slide right past the tower, so every drop counts.
+    overshoot: 0.75,
   },
   hard: {
     label: 'קשה',
@@ -50,6 +55,7 @@ export const DIFFICULTIES: Record<Difficulty, DifficultyConfig> = {
     speedUp: 1.6,
     maxSpeed: 105,
     tolerance: 2,
+    overshoot: 0.9,
   },
 }
 
@@ -99,13 +105,14 @@ export function speedForLevel(level: number, cfg: DifficultyConfig) {
   return Math.min(cfg.maxSpeed, cfg.speed + level * cfg.speedUp)
 }
 
-export function slideBounds(width: number) {
-  return { min: -SLIDE_MARGIN, max: WORLD_WIDTH - width + SLIDE_MARGIN }
+export function slideBounds(width: number, cfg: DifficultyConfig) {
+  const margin = width * cfg.overshoot
+  return { min: -margin, max: WORLD_WIDTH - width + margin }
 }
 
 // Blocks come in from alternating sides.
-function newMoving(level: number, width: number): MovingBlock {
-  const { min, max } = slideBounds(width)
+function newMoving(level: number, width: number, cfg: DifficultyConfig): MovingBlock {
+  const { min, max } = slideBounds(width, cfg)
   const fromLeft = level % 2 === 1
   return { left: fromLeft ? min : max, width, hue: hueForLevel(level), dir: fromLeft ? 1 : -1 }
 }
@@ -114,7 +121,7 @@ export function initialState(cfg: DifficultyConfig): StackState {
   const base: Block = { left: (WORLD_WIDTH - cfg.width) / 2, width: cfg.width, hue: hueForLevel(0) }
   return {
     placed: [base],
-    moving: newMoving(1, cfg.width),
+    moving: newMoving(1, cfg.width, cfg),
     chunks: [],
     popups: [],
     score: 0,
@@ -131,7 +138,7 @@ export function step(state: StackState, dtRaw: number, cfg: DifficultyConfig): S
   const popups = state.popups.map((p) => ({ ...p, age: p.age + dt })).filter((p) => p.age < EFFECT_SECONDS)
   if (state.over) return { ...state, chunks, popups }
 
-  const { min, max } = slideBounds(state.moving.width)
+  const { min, max } = slideBounds(state.moving.width, cfg)
   let left = state.moving.left + state.moving.dir * speedForLevel(state.placed.length, cfg) * dt
   let dir = state.moving.dir
   if (left > max) {
@@ -201,7 +208,7 @@ export function drop(state: StackState, cfg: DifficultyConfig): StackState {
 
   return {
     placed: [...state.placed, block],
-    moving: newMoving(level + 1, block.width),
+    moving: newMoving(level + 1, block.width, cfg),
     chunks,
     popups,
     score,

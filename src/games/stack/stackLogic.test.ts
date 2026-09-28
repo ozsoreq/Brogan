@@ -26,7 +26,7 @@ function perfectDrop(state: StackState, cfg = easy) {
 describe('sliding', () => {
   it('slides and bounces back at the edges, staying in its lane', () => {
     let s = initialState(easy)
-    const { min, max } = slideBounds(s.moving.width)
+    const { min, max } = slideBounds(s.moving.width, easy)
     expect(s.moving.left).toBe(min)
     let turnedBack = false
     for (let i = 0; i < 600; i++) {
@@ -76,7 +76,7 @@ describe('dropping', () => {
     const s = drop(withMovingAt(start, start.placed[0].left + 10), easy)
     expect(s.moving.width).toBe(s.placed[1].width)
     expect(s.moving.dir).toBe(-1)
-    expect(s.moving.left).toBe(slideBounds(s.moving.width).max)
+    expect(s.moving.left).toBe(slideBounds(s.moving.width, easy).max)
   })
 
   it('missing the tower completely ends the game', () => {
@@ -122,3 +122,22 @@ describe('effects', () => {
     expect(s.placed).toHaveLength(41)
   })
 })
+
+describe('slide range', () => {
+  const canMissCompletely = (cfg: (typeof DIFFICULTIES)[keyof typeof DIFFICULTIES]) => {
+    const start = initialState(cfg)
+    const base = start.placed[0]
+    const { min, max } = slideBounds(cfg.width, cfg)
+    return min + cfg.width <= base.left || max >= base.left + base.width
+  }
+
+  it('on easy a full-width block always lands at least partly on the tower', () => {
+    expect(canMissCompletely(DIFFICULTIES.easy)).toBe(false)
+  })
+
+  it('on medium and hard it can slide right past the tower, so the first drops count too', () => {
+    expect(canMissCompletely(DIFFICULTIES.medium)).toBe(true)
+    expect(canMissCompletely(hard)).toBe(true)
+  })
+})
+

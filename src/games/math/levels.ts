@@ -33,8 +33,30 @@ function difficultyProgress(level: number): number {
   return (level - 1) / (TOTAL_LEVELS - 1)
 }
 
-function makeOptions(answer: number): number[] {
+// Wrong answers a child could really arrive at: off by one or two, a slip in the
+// tens, the wrong operation, or a neighbouring times-table entry. Random numbers
+// near the answer only fill in if these run out.
+function mistakes(a: number, b: number, operator: Operator, answer: number): number[] {
+  const near = [answer + 1, answer - 1, answer + 2, answer - 2]
+  const tens = answer >= 10 ? [answer + 10, answer - 10] : []
+  switch (operator) {
+    case '+':
+      return [...near, ...tens, Math.abs(a - b)]
+    case '−':
+      return [...near, ...tens, a + b]
+    case '×':
+      return [a * (b + 1), a * (b - 1), (a + 1) * b, (a - 1) * b, a + b, answer + 1, answer - 1]
+    case '÷':
+      return [answer + 1, answer - 1, answer + 2, b, a - b]
+  }
+}
+
+function makeOptions(a: number, b: number, operator: Operator, answer: number): number[] {
   const options = new Set<number>([answer])
+  for (const m of shuffle(mistakes(a, b, operator, answer))) {
+    if (options.size === 4) break
+    if (m >= 0 && m !== answer) options.add(m)
+  }
   let spread = Math.max(3, Math.round(Math.abs(answer) * 0.25))
   let guard = 0
   while (options.size < 4 && guard < 200) {
@@ -48,35 +70,39 @@ function makeOptions(answer: number): number[] {
 }
 
 function buildExercise(a: number, b: number, operator: Operator, answer: number): MathExercise {
-  return { a, b, operator, answer, options: makeOptions(answer) }
+  return { a, b, operator, answer, options: makeOptions(a, b, operator, answer) }
 }
+
+// From level 5 on, skip the "free" exercises (+0, −0, ×1, ÷1).
+const NO_TRIVIAL_FROM_LEVEL = 5
 
 function generateExercise(level: number, operator: Operator): MathExercise {
   const t = difficultyProgress(level)
+  const min = level >= NO_TRIVIAL_FROM_LEVEL ? 1 : 0
 
   switch (operator) {
     case '+': {
       const maxNum = Math.round(10 + t * 190)
-      const a = randInt(0, maxNum)
-      const b = randInt(0, maxNum)
+      const a = randInt(min, maxNum)
+      const b = randInt(min, maxNum)
       return buildExercise(a, b, '+', a + b)
     }
     case '−': {
       const maxNum = Math.round(10 + t * 190)
-      const a = randInt(1, maxNum)
-      const b = randInt(0, a)
+      const a = randInt(1 + min, maxNum)
+      const b = randInt(min, a)
       return buildExercise(a, b, '−', a - b)
     }
     case '×': {
       const maxFactor = Math.round(3 + t * 17)
-      const a = randInt(1, maxFactor)
-      const b = randInt(1, maxFactor)
+      const a = randInt(1 + min, maxFactor)
+      const b = randInt(1 + min, maxFactor)
       return buildExercise(a, b, '×', a * b)
     }
     case '÷': {
       const maxFactor = Math.round(3 + t * 17)
-      const divisor = randInt(1, maxFactor)
-      const quotient = randInt(1, maxFactor)
+      const divisor = randInt(1 + min, maxFactor)
+      const quotient = randInt(1 + min, maxFactor)
       return buildExercise(divisor * quotient, divisor, '÷', quotient)
     }
   }

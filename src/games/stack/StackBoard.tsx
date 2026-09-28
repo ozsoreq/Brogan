@@ -185,12 +185,12 @@ export function StackBoard({ difficulty, onChangeDifficulty }: StackBoardProps) 
           <p className="text-2xl font-extrabold text-slate-800">אופס! הבלוק נפל</p>
           <p className="text-5xl font-extrabold text-sky-600">{state.score}</p>
           <p className="text-slate-600">
-            בנית מגדל של {floors} קומות 🏢 · {state.perfects} הנחות מושלמות ✨ (כל אחת שווה {PERFECT_POINTS})
+            בניתם מגדל של {floors} קומות 🏢 · {state.perfects} הנחות מושלמות ✨ (כל אחת שווה {PERFECT_POINTS})
           </p>
           {isNewRecord ? (
             <p className="rounded-full bg-amber-100 px-4 py-1 font-semibold text-amber-700">🏅 שיא חדש ברמה {cfg.label}!</p>
           ) : (
-            best !== null && <p className="text-sm text-slate-500">השיא שלך ברמה {cfg.label}: {best}</p>
+            best !== null && <p className="text-sm text-slate-500">השיא שלכם ברמה {cfg.label}: {best}</p>
           )}
           <div className="flex w-full flex-col gap-3">
             <button
@@ -199,7 +199,7 @@ export function StackBoard({ difficulty, onChangeDifficulty }: StackBoardProps) 
               className="flex items-center justify-center gap-2 rounded-2xl bg-sky-600 px-6 py-3 font-semibold text-white shadow-md transition hover:bg-sky-700 active:scale-95"
             >
               <RotateCcw className="h-5 w-5" aria-hidden />
-              שחק שוב
+              שחקו שוב
             </button>
             <button
               type="button"

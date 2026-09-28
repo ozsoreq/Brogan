@@ -48,7 +48,7 @@ export function MathLevelPlay({ level, unlockUpTo }: MathLevelPlayProps) {
             total={total}
             itemLabel="תרגילים"
             passed={passed}
-            failHint="נסו שוב!"
+            failHint="אפשר לנסות שוב!"
             retryButtonClass="bg-violet-600 hover:bg-violet-700"
             onRetry={restart}
             onNextLevel={() => navigate(`/learning/math/${level + 1}`)}

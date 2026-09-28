@@ -140,7 +140,7 @@ export function FruitBoard({ difficulty, onChangeDifficulty }: FruitBoardProps) 
               🍉🔪
             </span>
             <p className="font-extrabold" style={{ fontSize: '7cqw' }}>
-              גע כדי להתחיל
+              געו כדי להתחיל
             </p>
             <p style={{ fontSize: '4.5cqw' }}>החליקו את האצבע על הפירות, והיזהרו מהפצצות 💣</p>
           </div>
@@ -157,11 +157,11 @@ export function FruitBoard({ difficulty, onChangeDifficulty }: FruitBoardProps) 
             {state.lives === 0 ? 'אוי! נגמרו הלבבות' : 'נגמר הזמן!'}
           </p>
           <p className="text-5xl font-extrabold text-rose-500">{state.score}</p>
-          <p className="text-slate-600">חתכת {state.sliced} פירות 🍉</p>
+          <p className="text-slate-600">חתכתם {state.sliced} פירות 🍉</p>
           {isNewRecord ? (
             <p className="rounded-full bg-amber-100 px-4 py-1 font-semibold text-amber-700">🏅 שיא חדש ברמה {cfg.label}!</p>
           ) : (
-            best !== null && <p className="text-sm text-slate-500">השיא שלך ברמה {cfg.label}: {best}</p>
+            best !== null && <p className="text-sm text-slate-500">השיא שלכם ברמה {cfg.label}: {best}</p>
           )}
           <div className="flex w-full flex-col gap-3">
             <button
@@ -170,7 +170,7 @@ export function FruitBoard({ difficulty, onChangeDifficulty }: FruitBoardProps) 
               className="flex items-center justify-center gap-2 rounded-2xl bg-rose-500 px-6 py-3 font-semibold text-white shadow-md transition hover:bg-rose-600 active:scale-95"
             >
               <RotateCcw className="h-5 w-5" aria-hidden />
-              שחק שוב
+              שחקו שוב
             </button>
             <button
               type="button"

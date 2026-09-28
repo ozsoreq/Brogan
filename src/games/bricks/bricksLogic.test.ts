@@ -5,6 +5,7 @@ import {
   brickRect,
   buildStage,
   DIFFICULTIES,
+  ENDGAME_BRICKS,
   initialState,
   launch,
   movePaddle,
@@ -166,3 +167,28 @@ describe('stages', () => {
     expect(buildStage(1, hard, 0, Math.random).some((b) => b.strong)).toBe(true)
   })
 })
+
+describe('endgame help', () => {
+  // A lone brick in the top-left corner and a ball bouncing straight up and down
+  // on the far right: without help it would never hit the brick.
+  const corner: Brick = { id: 1, row: 0, col: 0, hits: 1, strong: false, star: false }
+  const straightUp = () => ({ ...flying({ x: 85, y: 100, vx: 0, vy: -55 }, { bricks: [corner], paddleX: 85 }) })
+
+  it(`with ${ENDGAME_BRICKS} or fewer bricks left, the ball curves toward them`, () => {
+    let s = straightUp()
+    let seconds = 0
+    while (s.stage === 1 && seconds < 20) {
+      // keep the paddle under the ball, like a child tracking it
+      s = step({ ...s, paddleX: Math.min(85, Math.max(15, s.ball.x)) }, 1 / 60, easy, noStars)
+      seconds += 1 / 60
+    }
+    expect(s.stage).toBe(2)
+  })
+
+  it('a full wall is not steered', () => {
+    const wall = buildStage(1, easy, 0, noStars)
+    const s = step(flying({ x: 85, y: 100, vx: 0, vy: -55 }, { bricks: wall }), 1 / 60, easy, noStars)
+    expect(s.ball.vx).toBe(0)
+  })
+})
+

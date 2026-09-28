@@ -117,7 +117,7 @@ export function RunnerBoard({ character, difficulty, onChangeDifficulty }: Runne
               👆
             </motion.span>
             <p className="font-extrabold text-slate-800" style={{ fontSize: '5.5cqw' }}>
-              גע כדי להתחיל
+              געו כדי להתחיל
             </p>
           </div>
         )}
@@ -129,13 +129,13 @@ export function RunnerBoard({ character, difficulty, onChangeDifficulty }: Runne
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col items-center gap-4 rounded-3xl bg-white p-6 text-center shadow-xl"
         >
-          <p className="text-2xl font-extrabold text-slate-800">אופס! נתקעת 😅</p>
+          <p className="text-2xl font-extrabold text-slate-800">אופס! נתקעתם 😅</p>
           <p className="text-5xl font-extrabold text-sky-600">{score}</p>
-          <p className="text-slate-600">אספת {state.starsCollected} כוכבים ⭐ (כל כוכב שווה {STAR_BONUS} נקודות)</p>
+          <p className="text-slate-600">אספתם {state.starsCollected} כוכבים ⭐ (כל כוכב שווה {STAR_BONUS} נקודות)</p>
           {isNewRecord ? (
             <p className="rounded-full bg-amber-100 px-4 py-1 font-semibold text-amber-700">🏅 שיא חדש ברמה {cfg.label}!</p>
           ) : (
-            best !== null && <p className="text-sm text-slate-500">השיא שלך ברמה {cfg.label}: {best}</p>
+            best !== null && <p className="text-sm text-slate-500">השיא שלכם ברמה {cfg.label}: {best}</p>
           )}
           <div className="flex w-full flex-col gap-3">
             <button
@@ -144,7 +144,7 @@ export function RunnerBoard({ character, difficulty, onChangeDifficulty }: Runne
               className="flex items-center justify-center gap-2 rounded-2xl bg-sky-500 px-6 py-3 font-semibold text-white shadow-md transition hover:bg-sky-600 active:scale-95"
             >
               <RotateCcw className="h-5 w-5" aria-hidden />
-              שחק שוב
+              שחקו שוב
             </button>
             <button
               type="button"
@@ -158,7 +158,7 @@ export function RunnerBoard({ character, difficulty, onChangeDifficulty }: Runne
         </motion.div>
       ) : (
         <p className="text-center text-slate-600">
-          גע במשחק כדי לקפוץ מעל 🌵 ו-🪨 · קפוץ לתפוס ⭐ לבונוס
+          געו במשחק כדי לקפוץ מעל 🌵 ו-🪨 · קפצו לתפוס ⭐ לבונוס
         </p>
       )}
     </div>

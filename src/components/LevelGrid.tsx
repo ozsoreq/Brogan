@@ -18,8 +18,8 @@ export function LevelGrid({ totalLevels, unlockedLevel, nextTileClass, onSelect 
         const isCompleted = level < unlockedLevel
         const isNext = level === unlockedLevel
 
-        let tileStyle = 'bg-slate-100 text-slate-300'
-        if (isCompleted) tileStyle = 'bg-emerald-500 text-white shadow-sm'
+        let tileStyle = 'bg-slate-100 text-slate-400'
+        if (isCompleted) tileStyle = 'bg-emerald-700 text-white shadow-sm'
         else if (isNext) tileStyle = nextTileClass
 
         const label = isCompleted

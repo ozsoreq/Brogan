@@ -23,6 +23,10 @@ const LAUNCH_ANGLE = 0.35
 const POPUP_SECONDS = 0.7
 const MAX_DT = 0.05
 const MAX_SUBSTEP = 1
+// With only a few bricks left, an upward ball curves gently toward the nearest
+// one, so the last bricks don't turn into a long, frustrating hunt.
+export const ENDGAME_BRICKS = 3
+const HOMING_RAD_PER_SEC = 0.6
 
 export type Difficulty = 'easy' | 'medium' | 'hard'
 
@@ -220,6 +224,31 @@ function overlapsPaddle(x: number, y: number, r: number, paddleX: number, cfg: D
   )
 }
 
+function nearestBrickCenter(bricks: Brick[], x: number, y: number) {
+  let best = { x: 0, y: 0 }
+  let bestDist = Infinity
+  for (const b of bricks) {
+    const r = brickRect(b)
+    const c = { x: r.x + r.w / 2, y: r.y + r.h / 2 }
+    const d = (c.x - x) ** 2 + (c.y - y) ** 2
+    if (d < bestDist) {
+      bestDist = d
+      best = c
+    }
+  }
+  return best
+}
+
+/** Rotates the velocity toward `target` by at most `maxTurn` radians, keeping its speed. */
+function steerToward(x: number, y: number, vx: number, vy: number, target: { x: number; y: number }, maxTurn: number) {
+  const current = Math.atan2(vy, vx)
+  let diff = Math.atan2(target.y - y, target.x - x) - current
+  diff = Math.atan2(Math.sin(diff), Math.cos(diff))
+  const angle = current + Math.max(-maxTurn, Math.min(maxTurn, diff))
+  const speed = Math.hypot(vx, vy)
+  return [speed * Math.cos(angle), speed * Math.sin(angle)] as const
+}
+
 export function step(state: BricksState, dtRaw: number, cfg: DifficultyConfig, rng: Rng = Math.random): BricksState {
   if (state.over) return state
   const dt = Math.min(dtRaw, MAX_DT)
@@ -246,6 +275,9 @@ export function step(state: BricksState, dtRaw: number, cfg: DifficultyConfig, r
   const h = dt / substeps
 
   for (let i = 0; i < substeps; i++) {
+    if (bricks.length <= ENDGAME_BRICKS && vy < 0) {
+      ;[vx, vy] = steerToward(x, y, vx, vy, nearestBrickCenter(bricks, x, y), HOMING_RAD_PER_SEC * h)
+    }
     x += vx * h
     y += vy * h
 

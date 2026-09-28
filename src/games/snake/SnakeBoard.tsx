@@ -113,15 +113,15 @@ export function SnakeBoard({ difficulty, onChangeDifficulty }: SnakeBoardProps) 
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col items-center gap-4 rounded-3xl bg-white p-6 text-center shadow-xl"
         >
-          <p className="text-2xl font-extrabold text-slate-800">{state.won ? 'מילאת את כל הלוח! 🏆' : 'אופס! הנחש נתקע'}</p>
+          <p className="text-2xl font-extrabold text-slate-800">{state.won ? 'מילאתם את כל הלוח! 🏆' : 'אופס! הנחש נתקע'}</p>
           <p className="text-5xl font-extrabold text-emerald-600">{state.score}</p>
           <p className="text-slate-600">
-            אכלת {state.apples} תפוחים 🍎 · כוכב ⭐ שווה {BONUS_POINTS} נקודות
+            אכלתם {state.apples} תפוחים 🍎 · כוכב ⭐ שווה {BONUS_POINTS} נקודות
           </p>
           {isNewRecord ? (
             <p className="rounded-full bg-amber-100 px-4 py-1 font-semibold text-amber-700">🏅 שיא חדש ברמה {cfg.label}!</p>
           ) : (
-            best !== null && <p className="text-sm text-slate-500">השיא שלך ברמה {cfg.label}: {best}</p>
+            best !== null && <p className="text-sm text-slate-500">השיא שלכם ברמה {cfg.label}: {best}</p>
           )}
           <div className="flex w-full flex-col gap-3">
             <button
@@ -130,7 +130,7 @@ export function SnakeBoard({ difficulty, onChangeDifficulty }: SnakeBoardProps) 
               className="flex items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-6 py-3 font-semibold text-white shadow-md transition hover:bg-emerald-700 active:scale-95"
             >
               <RotateCcw className="h-5 w-5" aria-hidden />
-              שחק שוב
+              שחקו שוב
             </button>
             <button
               type="button"

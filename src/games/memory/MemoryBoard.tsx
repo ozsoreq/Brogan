@@ -33,7 +33,7 @@ export function MemoryBoard({ difficulty, onChangeDifficulty }: MemoryBoardProps
           {'⭐'.repeat(stars)}
           <span className="opacity-20">{'⭐'.repeat(3 - stars)}</span>
         </p>
-        <p className="text-2xl font-extrabold text-slate-800">מצאת את כל הזוגות!</p>
+        <p className="text-2xl font-extrabold text-slate-800">מצאתם את כל הזוגות!</p>
         <div className="flex gap-6 text-slate-600">
           <p>
             מהלכים: <span className="font-bold text-slate-800">{moves}</span>
@@ -45,7 +45,7 @@ export function MemoryBoard({ difficulty, onChangeDifficulty }: MemoryBoardProps
         {isNewRecord ? (
           <p className="rounded-full bg-amber-100 px-4 py-1 font-semibold text-amber-700">🏅 שיא חדש ברמה {label}!</p>
         ) : (
-          best !== null && <p className="text-sm text-slate-500">השיא שלך ברמה {label}: {best} מהלכים</p>
+          best !== null && <p className="text-sm text-slate-500">השיא שלכם ברמה {label}: {best} מהלכים</p>
         )}
         <div className="mt-2 flex w-full flex-col gap-3">
           <button
@@ -54,7 +54,7 @@ export function MemoryBoard({ difficulty, onChangeDifficulty }: MemoryBoardProps
             className="flex items-center justify-center gap-2 rounded-2xl bg-fuchsia-600 px-6 py-3 font-semibold text-white shadow-md transition hover:bg-fuchsia-700 active:scale-95"
           >
             <RotateCcw className="h-5 w-5" aria-hidden />
-            שחק שוב
+            שחקו שוב
           </button>
           <button
             type="button"

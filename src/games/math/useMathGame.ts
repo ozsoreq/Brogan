@@ -7,7 +7,7 @@ const FEEDBACK_DELAY_MS = 900
 const isCorrectAnswer = (exercise: MathExercise, value: number) => value === exercise.answer
 
 export function useMathGame(level: number) {
-  // Generated once per visit to the level, so "נסה שוב" replays the exact
+  // Generated once per visit to the level, so "נסו שוב" replays the exact
   // same exercises the player just failed. Re-entering the level from the
   // level select screen generates a fresh set.
   const [exercises] = useState(() => buildLevelExercises(level))
