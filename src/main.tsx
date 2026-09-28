@@ -11,3 +11,13 @@ createRoot(document.getElementById('root')!).render(
     </BrowserRouter>
   </StrictMode>,
 )
+
+// Offline support and "Add to Home Screen" (production builds only).
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {
+      // offline support is a bonus; the app works without it
+    })
+  })
+}
+
