@@ -1,16 +1,22 @@
 import { motion } from 'framer-motion'
 import type { Round, Feedback } from './types'
+import { wordTiles } from './words'
 
 interface WordDisplayProps {
   round: Round
   feedback: Feedback
 }
 
+const TILE_MAX_PX = 56
+
 export function WordDisplay({ round, feedback }: WordDisplayProps) {
-  const letters = round.word.split('')
+  const tiles = wordTiles(round.word)
+  // Tiles shrink together so even a 9-letter word fits a 320px phone; the
+  // letters scale with the row's width (cqw) rather than a fixed size.
+  const fontSize = `min(2.25rem, ${Math.round(62 / tiles.length)}cqw)`
 
   return (
-    <div className="flex flex-col items-center gap-6">
+    <div className="flex w-full flex-col items-center gap-6">
       <motion.div
         key={round.word}
         initial={{ scale: 0.7, opacity: 0 }}
@@ -21,44 +27,45 @@ export function WordDisplay({ round, feedback }: WordDisplayProps) {
         {round.emoji}
       </motion.div>
 
-      <div className="flex gap-2 sm:gap-3" dir="rtl">
-        {letters.map((char, index) => {
-          const isBlank = index === round.blankIndex
+      <div className="w-full" style={{ containerType: 'inline-size' }}>
+        <div className="flex w-full justify-center gap-[min(0.5rem,1.5cqw)]" dir="rtl">
+          {tiles.map(({ text, index }) => {
+            const isBlank = index === round.blankIndex
+            const tileStyle = { flex: `0 1 ${TILE_MAX_PX}px`, minWidth: 0, fontSize }
 
-          if (!isBlank) {
+            if (!isBlank) {
+              return (
+                <div
+                  key={index}
+                  style={tileStyle}
+                  className="flex h-16 items-center justify-center rounded-2xl bg-white font-bold text-slate-800 shadow-sm sm:h-20"
+                >
+                  {text}
+                </div>
+              )
+            }
+
+            const showAnswer = feedback !== null
+            const answerColor =
+              feedback === 'correct'
+                ? 'bg-emerald-100 text-emerald-600 border-emerald-400'
+                : 'bg-rose-100 text-rose-600 border-rose-400'
+
             return (
-              <div
+              <motion.div
                 key={index}
-                className="flex h-16 w-14 items-center justify-center rounded-2xl bg-white text-4xl font-bold text-slate-800 shadow-sm sm:h-20 sm:w-16 sm:text-5xl"
+                animate={feedback === 'wrong' ? { x: [0, -8, 8, -8, 8, 0] } : { x: 0 }}
+                transition={{ duration: 0.4 }}
+                style={tileStyle}
+                className={`flex h-16 items-center justify-center rounded-2xl border-2 border-dashed font-bold shadow-sm sm:h-20 ${
+                  showAnswer ? answerColor : 'border-violet-300 bg-violet-50 text-violet-300'
+                }`}
               >
-                {char}
-              </div>
+                {showAnswer ? text : ''}
+              </motion.div>
             )
-          }
-
-          const showAnswer = feedback !== null
-          const answerColor =
-            feedback === 'correct'
-              ? 'bg-emerald-100 text-emerald-600 border-emerald-400'
-              : 'bg-rose-100 text-rose-600 border-rose-400'
-
-          return (
-            <motion.div
-              key={index}
-              animate={
-                feedback === 'wrong' ? { x: [0, -8, 8, -8, 8, 0] } : { x: 0 }
-              }
-              transition={{ duration: 0.4 }}
-              className={`flex h-16 w-14 items-center justify-center rounded-2xl border-2 border-dashed text-4xl font-bold shadow-sm sm:h-20 sm:w-16 sm:text-5xl ${
-                showAnswer
-                  ? answerColor
-                  : 'border-violet-300 bg-violet-50 text-violet-300'
-              }`}
-            >
-              {showAnswer ? char : ''}
-            </motion.div>
-          )
-        })}
+          })}
+        </div>
       </div>
     </div>
   )

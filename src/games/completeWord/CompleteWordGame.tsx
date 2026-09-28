@@ -64,7 +64,7 @@ export function CompleteWordGame() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.25 }}
-                  className="flex flex-col items-center gap-10"
+                  className="flex w-full max-w-md flex-col items-center gap-10"
                 >
                   <WordDisplay round={currentRound} feedback={feedback} />
                   <LetterGrid

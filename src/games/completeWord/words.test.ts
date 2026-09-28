@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildRounds, WORD_BANK_ENTRIES } from './words'
+import { buildRounds, WORD_BANK_ENTRIES, wordTiles } from './words'
 
 const FINAL_LETTERS = ['ך', 'ם', 'ן', 'ף', 'ץ']
 
@@ -56,6 +56,19 @@ describe('buildRounds', () => {
           expect(bankWords.has(alt), `${r.word} -> ${alt}`).toBe(false)
         }
       }
+    }
+  })
+})
+
+describe('word tiles', () => {
+  it('keeps a geresh on the same tile as its letter', () => {
+    expect(wordTiles('ג׳ירפה').map((t) => t.text)).toEqual(['ג׳', 'י', 'ר', 'פ', 'ה'])
+    expect(wordTiles('כלב').map((t) => t.index)).toEqual([0, 1, 2])
+  })
+
+  it('never hides a letter that carries a geresh', () => {
+    for (let i = 0; i < 300; i++) {
+      for (const r of buildRounds()) expect(r.word[r.blankIndex + 1]).not.toBe('׳')
     }
   })
 })

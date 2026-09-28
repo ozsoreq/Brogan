@@ -212,10 +212,26 @@ const OTHER_REAL_WORDS = new Set(
   ).split(' '),
 )
 
+const GERESH = '׳'
+
 // Hebrew final-form letters and punctuation never appear as a blank since
-// they aren't in HEBREW_ALPHABET; any other position may be hidden.
+// they aren't in HEBREW_ALPHABET. A letter carrying a geresh (the ג in ג׳ירפה)
+// is a different sound, so it isn't hidden either; any other position may be.
 function blankCandidates(word: string): number[] {
-  return [...word].flatMap((ch, i) => (HEBREW_ALPHABET.includes(ch) ? [i] : []))
+  return [...word].flatMap((ch, i) => (HEBREW_ALPHABET.includes(ch) && word[i + 1] !== GERESH ? [i] : []))
+}
+
+/**
+ * Splits a word into the tiles shown on screen: a geresh joins the letter before it
+ * (ג׳ is one tile). Each tile keeps the index of its first character.
+ */
+export function wordTiles(word: string): { text: string; index: number }[] {
+  const tiles: { text: string; index: number }[] = []
+  ;[...word].forEach((ch, i) => {
+    if (ch === GERESH && tiles.length > 0) tiles[tiles.length - 1].text += ch
+    else tiles.push({ text: ch, index: i })
+  })
+  return tiles
 }
 
 function shuffle<T>(items: T[]): T[] {
