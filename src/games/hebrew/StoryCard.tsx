@@ -30,7 +30,7 @@ export function StoryCard({ title, story, nikud }: StoryCardProps) {
   }, [story])
 
   return (
-    <div className="w-full rounded-3xl bg-white p-4 shadow-sm">
+    <div className="w-full rounded-3xl bg-white px-4 py-3 shadow-sm">
       <div className="mb-1 flex items-center gap-2 text-amber-700">
         <BookOpen className="h-5 w-5 shrink-0" aria-hidden />
         <h2 className="flex-1 font-bold">{title}</h2>
@@ -65,7 +65,7 @@ export function StoryCard({ title, story, nikud }: StoryCardProps) {
           ref={textRef}
           tabIndex={overflowing ? 0 : undefined}
           className={`overflow-y-auto text-lg leading-relaxed text-slate-700 ${
-            expanded ? '' : 'max-h-[max(4.5rem,calc(100dvh-34rem))]'
+            expanded ? '' : 'max-h-[max(4.5rem,calc(100dvh-36rem))]'
           }`}
         >
           <p>{story}</p>

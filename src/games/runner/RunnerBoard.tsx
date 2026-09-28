@@ -49,7 +49,7 @@ export function RunnerBoard({ character, difficulty, onChangeDifficulty }: Runne
           press()
         }}
         className="relative w-full touch-manipulation select-none overflow-hidden rounded-3xl bg-gradient-to-b from-sky-300 via-sky-200 to-amber-50 shadow-lg"
-        style={{ aspectRatio: `100 / ${BOX_HEIGHT_UNITS}`, containerType: 'inline-size', ...fitBoard('228px', 100 / BOX_HEIGHT_UNITS) }}
+        style={{ aspectRatio: `100 / ${BOX_HEIGHT_UNITS}`, containerType: 'inline-size', ...fitBoard('248px', 100 / BOX_HEIGHT_UNITS) }}
       >
         <span className="absolute right-[6%] top-[6%]" style={{ fontSize: '10cqw' }} aria-hidden>
           ☀️

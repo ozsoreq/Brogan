@@ -27,6 +27,47 @@
 
 ---
 
+## ✅ Fix status (update after the fix round)
+
+Every Critical, High and Medium finding is fixed, except **H6 (deployment)**, which needs your own Vercel account. Each fix was re-verified with the same methods as the original QA:
+
+| Re-check | Result |
+|---|---|
+| Device sweep (22 screens × 6 devices) | No horizontal overflow and no JS errors anywhere. No game needs scrolling in portrait on any phone; phones held sideways get the rotate screen. |
+| axe-core, 12 screens | **0 violations** (was 43 elements) |
+| Hebrew fold check, levels 1–50 | Question and answers fit on every level on 360×640 and Pixel 5 |
+| Regression and feature e2e | Every game played by bots; pause/resume and auto-pause in all 6 real-time games; back button, deep links; sound, read-aloud and mute; nikud; offline mode |
+| Unit tests | 216 passing (was 200); typecheck, lint and build clean |
+
+| ID | Status | Fixed in |
+|---|---|---|
+| C1 | ✅ Fixed. Tiles scale with the word; a 9-letter word fits a 320px phone | `bacfcea` |
+| H1 | ✅ Fixed. Letter buttons are 51–66 px (were 32 px) | `bacfcea` |
+| H2 | ✅ Fixed. Boards are capped by screen height; on short screens the arrow pad is a single row | `537e8a4` |
+| H3 | ✅ Fixed. "סובבו את הטלפון" screen on phones in landscape; auto-pause on rotate | `537e8a4`, `70e19ea` |
+| H4 | ✅ Fixed. Story capped and scrollable, with a "כל הסיפור" toggle; the question scrolls into view. *Residual: on a 320×568 iPhone SE, levels 35–50 need a small scroll.* | `012530b` |
+| H5 | ✅ Fixed. PWA: manifest, icons, offline service worker, portrait lock. Verified offline on the production build | `3483358` |
+| H6 | ⏳ **Open.** Needs a Vercel account (import the repo at vercel.com/new) | – |
+| H7 | ✅ Fixed. WebAudio sound effects everywhere; Hebrew read-aloud for instructions, words, stories and questions; mute switch | `501a5c2` |
+| H8 | ✅ Fixed. Levels 1–20 vocalized, with an on/off toggle; tests guard the letters | `f096db8` |
+| M1 | ✅ Fixed. Difficulty lives in the URL; the phone's back button matches the in-app back | `2deaa61` |
+| M2 | ✅ Fixed. All copy in plural | `aca61b3` |
+| M3 | ✅ Fixed. ⏸ button and auto-pause in 6 games; the hamster game runs on a game clock; the maze clock stops while hidden | `70e19ea` |
+| M4 | ✅ Fixed. Runtime colour-emoji check; unsupported words are skipped; the runner rock has a fallback | `771840a` |
+| M5 | ✅ Fixed. Error boundary with a way back to the menu | `2deaa61` |
+| M6 | ✅ Fixed. Lazy routes: first load 173 → 126 kB gzip, no large-chunk warning | `2deaa61` |
+| M7 | ✅ Fixed. Runner has קל/בינוני/קשה, with a floatier jump on easy | `2deaa61` |
+| M8 | ✅ Fixed. With ≤3 bricks left, the ball gently homes toward them | `aca61b3` |
+| M9 | ✅ Fixed. Medium and hard slide past the tower | `aca61b3` |
+| M10 | ✅ Fixed. Picture-tile grid, grouped into thinking and quick games | `42bf1ae` |
+| M11 | ✅ Fixed. Darker tile and button colours; axe is clean | `aca61b3` |
+| M12 | ✅ Fixed. In-app Hebrew confirm dialog | `aca61b3` |
+| M13 | ✅ Fixed. Mistake-based distractors; no +0/−0/×1/÷1 from level 5 | `aca61b3` |
+| L2, L4, L5 | ✅ Fixed along the way: geresh tiles, maze hint label, home `<main>` and iPhone SE fit | `bacfcea`, `537e8a4`, `501a5c2` |
+| Other Low items | Open, as listed in §4 | – |
+
+---
+
 ## 2. Severity scale
 
 | Level | Meaning |
@@ -321,3 +362,14 @@ Screenshots from this QA run are in [`qa-evidence/`](qa-evidence/):
 | [h3-landscape-bricks.png](qa-evidence/h3-landscape-bricks.png), [h3-landscape-snake.png](qa-evidence/h3-landscape-snake.png) | H3: boards overflowing a landscape phone |
 | [h4-hebrew-level-50.png](qa-evidence/h4-hebrew-level-50.png) | H4: level 50, question and answers off-screen |
 | [m10-games-menu.png](qa-evidence/m10-games-menu.png) | M10: long list of text cards with abstract icons |
+
+### After the fixes
+
+| Screenshot | What it shows |
+|---|---|
+| [c1-long-word-320px.png](qa-evidence/after/c1-long-word-320px.png) | C1/H1: 9-letter סקייטבורד fits a 320 px phone; 51 px letter buttons |
+| [h2-snake-360.png](qa-evidence/after/h2-snake-360.png), [h2-maze-iphone-se.png](qa-evidence/after/h2-maze-iphone-se.png) | H2: board, single-row pad, ⏸ and 🔊 all on screen |
+| [h3-rotate-prompt.png](qa-evidence/after/h3-rotate-prompt.png) | H3: rotate screen on a phone held sideways |
+| [h4-hebrew-level-50.png](qa-evidence/after/h4-hebrew-level-50.png) | H4: level 50 story, question and all answers on one screen |
+| [h8-nikud-level-17.png](qa-evidence/after/h8-nikud-level-17.png) | H8: vocalized story and answers, with the ניקוד toggle and 🔊 buttons |
+| [m10-games-menu.png](qa-evidence/after/m10-games-menu.png) | M10: picture-tile games menu |

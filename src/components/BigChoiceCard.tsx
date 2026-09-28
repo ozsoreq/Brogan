@@ -22,9 +22,9 @@ export function BigChoiceCard({
       onClick={onClick}
       whileHover={{ scale: 1.03, y: -4 }}
       whileTap={{ scale: 0.98 }}
-      className={`flex w-full flex-col items-center gap-4 rounded-3xl p-8 text-white shadow-lg sm:p-10 ${gradient}`}
+      className={`flex w-full flex-col items-center gap-4 rounded-3xl p-8 text-white shadow-lg short:gap-2 short:p-5 sm:p-10 ${gradient}`}
     >
-      <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
+      <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm short:h-14 short:w-14">
         <Icon className="h-10 w-10" strokeWidth={1.75} />
       </div>
       <div className="text-center">

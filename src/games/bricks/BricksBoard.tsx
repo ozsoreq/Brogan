@@ -79,7 +79,7 @@ export function BricksBoard({ difficulty, onChangeDifficulty }: BricksBoardProps
           aspectRatio: `${WORLD_WIDTH} / ${WORLD_HEIGHT}`,
           containerType: 'inline-size',
           touchAction: 'none',
-          ...fitBoard('144px', WORLD_WIDTH / WORLD_HEIGHT),
+          ...fitBoard('176px', WORLD_WIDTH / WORLD_HEIGHT),
         }}
       >
         {state.bricks.map((b) => {

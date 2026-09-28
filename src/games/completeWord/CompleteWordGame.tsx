@@ -36,7 +36,7 @@ export function CompleteWordGame() {
         onBack={() => navigate('/learning')}
       />
 
-      <main className="flex flex-1 flex-col items-center justify-center gap-8 px-4 py-8">
+      <main className="flex flex-1 flex-col items-center justify-center gap-6 px-4 py-6">
         {finished ? (
           <ResultScreen
             score={score}

@@ -97,7 +97,7 @@ export function StackBoard({ difficulty, onChangeDifficulty }: StackBoardProps) 
         className="relative w-full select-none overflow-hidden rounded-3xl shadow-lg"
         style={{
           aspectRatio: `${WORLD_WIDTH} / ${VIEW_HEIGHT}`,
-          ...fitBoard('144px', WORLD_WIDTH / VIEW_HEIGHT),
+          ...fitBoard('176px', WORLD_WIDTH / VIEW_HEIGHT),
           containerType: 'inline-size',
           touchAction: 'manipulation',
           backgroundColor: skyColor(floors),

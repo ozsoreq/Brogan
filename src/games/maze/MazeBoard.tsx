@@ -78,7 +78,7 @@ export function MazeBoard({ difficulty, onChangeDifficulty }: MazeBoardProps) {
         {...swipe}
         dir="ltr"
         className="relative aspect-square w-full select-none overflow-hidden rounded-3xl border-4 border-violet-300 bg-amber-50 shadow-lg"
-        style={{ touchAction: 'none', containerType: 'inline-size', ...fitBoard('calc(176px + var(--pad-h))') }}
+        style={{ touchAction: 'none', containerType: 'inline-size', ...fitBoard('calc(180px + var(--pad-h))') }}
       >
         <svg
           aria-hidden

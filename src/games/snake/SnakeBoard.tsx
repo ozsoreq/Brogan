@@ -54,7 +54,7 @@ export function SnakeBoard({ difficulty, onChangeDifficulty }: SnakeBoardProps) 
           backgroundSize: `${cell * 2}% ${cell * 2}%`,
           backgroundPosition: `0 0, ${cell}% ${cell}%`,
           containerType: 'inline-size',
-          ...fitBoard('calc(156px + var(--pad-h))'),
+          ...fitBoard('calc(176px + var(--pad-h))'),
         }}
       >
         <span

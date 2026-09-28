@@ -83,7 +83,7 @@ export function WhackBoard({ difficulty, onChangeDifficulty }: WhackBoardProps) 
 
       <div
         className="relative grid w-full grid-cols-3 gap-3 rounded-3xl bg-gradient-to-b from-lime-200 to-green-300 p-4 shadow-inner"
-        style={fitBoard('224px')}
+        style={fitBoard('244px')}
       >
         {holes.map((hole, index) => (
           <button

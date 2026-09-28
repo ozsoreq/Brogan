@@ -87,7 +87,7 @@ export function MemoryBoard({ difficulty, onChangeDifficulty }: MemoryBoardProps
 
       <div
         className="grid w-full gap-2 sm:gap-3"
-        style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, ...fitBoard('244px', columns / (cards.length / columns)) }}
+        style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, ...fitBoard('248px', columns / (cards.length / columns)) }}
       >
         {cards.map((card, index) => (
           <MemoryCard

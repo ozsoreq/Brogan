@@ -72,7 +72,7 @@ export function HebrewLevelPlay({ level, unlockUpTo }: HebrewLevelPlayProps) {
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-amber-50 via-white to-sky-50">
       <AppHeader title={`עברית · שלב ${level}`} onBack={() => navigate('/learning/hebrew')} />
 
-      <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center gap-4 px-4 py-4">
+      <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center gap-3 px-4 py-3">
         {finished ? (
           <LevelResultScreen
             level={level}

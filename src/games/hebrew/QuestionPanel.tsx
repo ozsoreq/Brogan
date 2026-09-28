@@ -24,7 +24,7 @@ export function QuestionPanel({
   const correctOption = question.options[question.correctIndex]
 
   return (
-    <div className="flex w-full flex-col gap-3">
+    <div className="flex w-full flex-col gap-2">
       <div className="flex items-center gap-2">
         <p className="flex-1 text-xl font-bold text-slate-800">{show(question.prompt)}</p>
         <SpeakButton text={`${show(question.prompt)} ${question.options.map(show).join(', ')}`} label="הקראת השאלה" />

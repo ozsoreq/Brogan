@@ -56,7 +56,7 @@ export function Connect4Board({ difficulty, onChangeDifficulty }: Connect4BoardP
         {status}
       </p>
 
-      <div dir="ltr" className="flex w-full flex-col gap-1" style={fitBoard('276px', COLS / ROWS)}>
+      <div dir="ltr" className="flex w-full flex-col gap-1" style={fitBoard('280px', COLS / ROWS)}>
         <div className="grid grid-cols-7 px-2" aria-hidden>
           {Array.from({ length: COLS }, (_, c) => (
             <span

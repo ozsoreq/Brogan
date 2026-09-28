@@ -8,14 +8,14 @@ export function HomePage() {
   const navigate = useNavigate()
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-violet-100 via-white to-sky-100 px-4 py-10">
+    <main className="relative flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-violet-100 via-white to-sky-100 px-4 py-8">
       <div className="absolute left-4 top-4">
         <SoundToggle />
       </div>
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-10 text-center"
+        className="mb-8 text-center"
       >
         <h1 className="text-3xl font-extrabold text-slate-800 sm:text-4xl">
           🎓 אקדמיית הלמידה
