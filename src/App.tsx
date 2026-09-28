@@ -1,8 +1,9 @@
-import { lazy, Suspense, type ComponentType } from 'react'
+import { lazy, Suspense, useEffect, type ComponentType } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { RotateHint } from './components/RotateHint'
 import { HomePage } from './pages/HomePage'
+import { stopSpeaking } from './lib/sound'
 
 // Every screen except home loads on demand, so the first screen appears fast
 // on slow phones and networks.
@@ -37,6 +38,8 @@ function Loading() {
 
 function App() {
   const { pathname } = useLocation()
+
+  useEffect(() => stopSpeaking(), [pathname])
 
   return (
     <ErrorBoundary resetKey={pathname}>

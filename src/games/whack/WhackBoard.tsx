@@ -4,6 +4,7 @@ import { BOMB_PENALTY, ROUND_SECONDS, starsFor, type Difficulty, type Hole } fro
 import { useWhackGame } from './useWhackGame'
 import { fitBoard } from '../../lib/fitBoard'
 import { PauseButton, PauseOverlay } from '../../components/Pause'
+import { useSoundOnIncrease, useSoundWhen } from '../../lib/sound'
 
 const HOLE_EMOJI: Record<Hole['kind'], string> = { mole: '🐹', bomb: '💣', hit: '⭐', boom: '💥' }
 
@@ -15,6 +16,9 @@ interface WhackBoardProps {
 export function WhackBoard({ difficulty, onChangeDifficulty }: WhackBoardProps) {
   const { cfg, phase, countdown, timeLeft, holes, score, hits, bombsHit, best, isNewRecord, whackAt, restart, paused, pause, resume } =
     useWhackGame(difficulty)
+  useSoundOnIncrease(hits, 'pop')
+  useSoundOnIncrease(bombsHit, 'bomb')
+  useSoundWhen(phase === 'over', 'win')
 
   if (phase === 'over') {
     const stars = starsFor(score, cfg)

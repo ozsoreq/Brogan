@@ -5,6 +5,7 @@ import { canShowEmoji } from '../../lib/emojiSupport'
 import { useRunnerGame } from './useRunnerGame'
 import { fitBoard } from '../../lib/fitBoard'
 import { PauseButton, PauseOverlay } from '../../components/Pause'
+import { useSoundOnIncrease, useSoundWhen } from '../../lib/sound'
 
 // The ground takes the bottom GROUND_PCT of the box; the world sits above it.
 // The box's aspect ratio keeps one world unit the same size on both axes.
@@ -28,6 +29,8 @@ interface RunnerBoardProps {
 
 export function RunnerBoard({ character, difficulty, onChangeDifficulty }: RunnerBoardProps) {
   const { cfg, state, phase, score, best, isNewRecord, press, restart, paused, pause, resume } = useRunnerGame(difficulty)
+  useSoundOnIncrease(state.starsCollected, 'pop')
+  useSoundWhen(phase === 'over', 'lose')
   const grounded = state.playerY <= 0
 
   return (

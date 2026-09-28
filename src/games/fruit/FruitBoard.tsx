@@ -5,6 +5,7 @@ import { START_LIVES, timeLeft, WORLD_HEIGHT, WORLD_WIDTH, type Difficulty } fro
 import { useFruitGame } from './useFruitGame'
 import { fitBoard } from '../../lib/fitBoard'
 import { PauseButton, PauseOverlay } from '../../components/Pause'
+import { useSoundOnIncrease, useSoundWhen } from '../../lib/sound'
 
 const leftPct = (x: number) => (x / WORLD_WIDTH) * 100
 const bottomPct = (y: number) => (y / WORLD_HEIGHT) * 100
@@ -17,6 +18,9 @@ interface FruitBoardProps {
 export function FruitBoard({ difficulty, onChangeDifficulty }: FruitBoardProps) {
   const { cfg, state, phase, trail, best, isNewRecord, pointerDown, pointerMove, pointerUp, restart, paused, pause, resume } =
     useFruitGame(difficulty)
+  useSoundOnIncrease(state.sliced, 'pop')
+  useSoundOnIncrease(-state.lives, 'bomb')
+  useSoundWhen(phase === 'over', 'lose')
   const boxRef = useRef<HTMLDivElement>(null)
 
   const toWorld = (e: PointerEvent) => {

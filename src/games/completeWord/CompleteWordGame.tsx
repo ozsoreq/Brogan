@@ -1,5 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { speak } from '../../lib/sound'
 import { AppHeader } from '../../components/AppHeader'
 import { FeedbackOverlay } from '../../components/FeedbackOverlay'
 import { useCompleteWordGame } from './useCompleteWordGame'
@@ -21,6 +23,11 @@ export function CompleteWordGame() {
     selectLetter,
     restart,
   } = useCompleteWordGame()
+
+  // Hearing the whole word after answering connects the letter to its sound.
+  useEffect(() => {
+    if (feedback && currentRound) speak(currentRound.word)
+  }, [feedback, currentRound])
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-violet-50 via-white to-fuchsia-50">

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import type { DifficultyKey } from '../lib/difficulty'
+import { SpeakButton } from './SoundControls'
 
 const LEVEL_COLORS: Record<DifficultyKey, string> = {
   easy: 'from-emerald-400 to-teal-500',
@@ -16,7 +17,10 @@ interface DifficultyPickerProps {
 export function DifficultyPicker({ intro, levels, onPick }: DifficultyPickerProps) {
   return (
     <div className="flex w-full max-w-sm flex-col gap-4">
-      <p className="text-center text-slate-600">{intro}</p>
+      <div className="flex items-start gap-2">
+        <p className="flex-1 text-center text-slate-600">{intro}</p>
+        <SpeakButton text={intro} label="הקראת ההוראות" />
+      </div>
       {(Object.keys(levels) as DifficultyKey[]).map((key) => {
         const { label, grades, detail } = levels[key]
         return (

@@ -1,5 +1,6 @@
 import { BookOpen, ChevronDown, ChevronUp } from 'lucide-react'
 import { useLayoutEffect, useRef, useState } from 'react'
+import { SpeakButton } from '../../components/SoundControls'
 
 interface StoryCardProps {
   title: string
@@ -31,6 +32,7 @@ export function StoryCard({ title, story }: StoryCardProps) {
       <div className="mb-1 flex items-center gap-2 text-amber-700">
         <BookOpen className="h-5 w-5 shrink-0" aria-hidden />
         <h2 className="flex-1 font-bold">{title}</h2>
+        <SpeakButton text={`${title}. ${story}`} label="הקראת הסיפור" />
         {(overflowing || expanded) && (
           <button
             type="button"

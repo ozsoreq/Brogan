@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Feedback } from '../components/FeedbackOverlay'
+import { play } from './sound'
 
 // Shared flow for every question-by-question game: pick an answer, show
 // feedback for `feedbackDelayMs`, then advance (or finish after the last item).
@@ -39,6 +40,7 @@ export function useQuizSession<Item, Answer>(
       setSelectedAnswer(answer)
       setFeedback(correct ? 'correct' : 'wrong')
       if (correct) setScore((s) => s + 1)
+      play(correct ? 'correct' : 'wrong')
 
       const isLast = currentIndex === items.length - 1
       timeoutRef.current = setTimeout(() => {

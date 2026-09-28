@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import type { Feedback } from '../../components/FeedbackOverlay'
 import type { BuiltQuestion } from './levels'
+import { SpeakButton } from '../../components/SoundControls'
 
 interface QuestionPanelProps {
   question: BuiltQuestion
@@ -21,7 +22,10 @@ export function QuestionPanel({
 
   return (
     <div className="flex w-full flex-col gap-3">
-      <p className="text-xl font-bold text-slate-800">{question.prompt}</p>
+      <div className="flex items-center gap-2">
+        <p className="flex-1 text-xl font-bold text-slate-800">{question.prompt}</p>
+        <SpeakButton text={`${question.prompt} ${question.options.join(', ')}`} label="הקראת השאלה" />
+      </div>
       <div className="flex flex-col gap-2">
         {question.options.map((option, index) => {
           const isSelected = option === selectedOption

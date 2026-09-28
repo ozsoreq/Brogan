@@ -16,6 +16,7 @@ import {
 import { useBricksGame } from './useBricksGame'
 import { fitBoard } from '../../lib/fitBoard'
 import { PauseButton, PauseOverlay } from '../../components/Pause'
+import { useSoundOnIncrease, useSoundWhen } from '../../lib/sound'
 
 const ROW_COLORS = ['#f43f5e', '#f97316', '#facc15', '#22c55e', '#06b6d4', '#3b82f6', '#a855f7', '#ec4899']
 
@@ -37,6 +38,10 @@ interface BricksBoardProps {
 
 export function BricksBoard({ difficulty, onChangeDifficulty }: BricksBoardProps) {
   const { cfg, state, phase, best, isNewRecord, pointerDown, pointerMove, restart, paused, pause, resume } = useBricksGame(difficulty)
+  useSoundOnIncrease(state.broken, 'hit')
+  useSoundOnIncrease(-state.lives, 'wrong')
+  useSoundOnIncrease(state.stage, 'win')
+  useSoundWhen(phase === 'over', 'lose')
   const boxRef = useRef<HTMLDivElement>(null)
 
   const toWorldX = (e: PointerEvent) => {

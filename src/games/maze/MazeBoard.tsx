@@ -5,6 +5,7 @@ import { useSwipe } from '../../lib/useSwipe'
 import { goalOf, HINT_PENALTY_SECONDS, isOpen, type Difficulty, type Maze, type Point } from './mazeLogic'
 import { formatTime, useMazeGame } from './useMazeGame'
 import { fitBoard } from '../../lib/fitBoard'
+import { useSoundOnIncrease, useSoundWhen } from '../../lib/sound'
 
 const WALL = 0.14
 
@@ -36,6 +37,9 @@ interface MazeBoardProps {
 export function MazeBoard({ difficulty, onChangeDifficulty }: MazeBoardProps) {
   const { cfg, run, hintCells, seconds, totalStars, best, isNewRecord, move, hint, nextLevel, restart } =
     useMazeGame(difficulty)
+  useSoundOnIncrease(run.starsCollected, 'pop')
+  useSoundWhen(run.phase === 'levelDone', 'correct')
+  useSoundWhen(run.phase === 'finished', 'win')
   const swipe = useSwipe(move)
   const { maze } = run.level
   const goal = goalOf(maze)

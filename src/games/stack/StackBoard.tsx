@@ -4,6 +4,7 @@ import { BLOCK_HEIGHT, PERFECT_POINTS, WORLD_WIDTH, type Block, type Difficulty 
 import { useStackGame } from './useStackGame'
 import { fitBoard } from '../../lib/fitBoard'
 import { PauseButton, PauseOverlay } from '../../components/Pause'
+import { useSoundOnIncrease, useSoundWhen } from '../../lib/sound'
 
 const VIEW_HEIGHT = 140
 const GROUND = 10
@@ -67,6 +68,9 @@ interface StackBoardProps {
 
 export function StackBoard({ difficulty, onChangeDifficulty }: StackBoardProps) {
   const { cfg, state, phase, best, isNewRecord, tap, restart, paused, pause, resume } = useStackGame(difficulty)
+  useSoundOnIncrease(state.placed.length, 'hit')
+  useSoundOnIncrease(state.perfects, 'correct')
+  useSoundWhen(phase === 'over', 'lose')
   const floors = state.placed.length - 1
   const movingLevel = state.placed.length
   const cameraY = Math.max(0, GROUND + movingLevel * BLOCK_HEIGHT - FOCUS_Y)

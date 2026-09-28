@@ -3,6 +3,7 @@ import { RotateCcw, SlidersHorizontal } from 'lucide-react'
 import { COLS, COMPUTER, DIFFICULTIES, landingRow, PLAYER, ROWS, type Difficulty } from './connect4Logic'
 import { useConnect4 } from './useConnect4'
 import { fitBoard } from '../../lib/fitBoard'
+import { useSoundOnIncrease, useSoundWhen } from '../../lib/sound'
 
 const DISC_COLOR = {
   [PLAYER]: 'bg-rose-500 shadow-[inset_0_-4px_0_rgba(0,0,0,0.25),inset_0_3px_0_rgba(255,255,255,0.35)]',
@@ -23,6 +24,9 @@ interface Connect4BoardProps {
 
 export function Connect4Board({ difficulty, onChangeDifficulty }: Connect4BoardProps) {
   const { board, turn, result, lastMove, gameNo, tally, playerMove, again } = useConnect4(difficulty)
+  useSoundOnIncrease(board.flat().filter((c) => c !== 0).length, 'hit')
+  useSoundWhen(result?.winner === PLAYER, 'win')
+  useSoundWhen(result?.winner === COMPUTER, 'lose')
   const cfg = DIFFICULTIES[difficulty]
   const myTurn = turn === PLAYER && !result
   const isWinCell = (r: number, c: number) => result?.cells.some(([rr, cc]) => rr === r && cc === c) ?? false

@@ -6,6 +6,7 @@ import { BONUS_POINTS, type Difficulty } from './snakeLogic'
 import { useSnakeGame } from './useSnakeGame'
 import { fitBoard } from '../../lib/fitBoard'
 import { PauseButton, PauseOverlay } from '../../components/Pause'
+import { useSoundOnIncrease, useSoundWhen } from '../../lib/sound'
 
 interface SnakeBoardProps {
   difficulty: Difficulty
@@ -14,6 +15,9 @@ interface SnakeBoardProps {
 
 export function SnakeBoard({ difficulty, onChangeDifficulty }: SnakeBoardProps) {
   const { cfg, state, phase, best, isNewRecord, steer, restart, paused, pause, resume } = useSnakeGame(difficulty)
+  useSoundOnIncrease(state.apples, 'pop')
+  useSoundWhen(phase === 'over' && !state.won, 'lose')
+  useSoundWhen(state.won, 'win')
   const cell = 100 / state.size
   const pos = (p: { x: number; y: number }) => ({
     left: `${p.x * cell}%`,

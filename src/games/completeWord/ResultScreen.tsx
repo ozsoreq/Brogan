@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion'
 import { Home, RotateCcw } from 'lucide-react'
+import { useEffect } from 'react'
+import { play } from '../../lib/sound'
 
 interface ResultScreenProps {
   score: number
@@ -23,6 +25,10 @@ export function ResultScreen({
 }: ResultScreenProps) {
   const percentage = Math.round((score / total) * 100)
   const message = getMessage(percentage)
+
+  useEffect(() => {
+    if (percentage >= 70) play('win')
+  }, [percentage])
 
   return (
     <motion.div

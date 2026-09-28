@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lucide-react'
+import { SoundToggle } from './SoundControls'
 
 interface AppHeaderProps {
   title: string
@@ -18,7 +19,8 @@ export function AppHeader({ title, onBack }: AppHeaderProps) {
           <ArrowRight className="h-5 w-5" />
         </button>
       )}
-      <h1 className="text-xl font-bold text-slate-800 sm:text-2xl">{title}</h1>
+      <h1 className="flex-1 text-xl font-bold text-slate-800 sm:text-2xl">{title}</h1>
+      <SoundToggle />
     </header>
   )
 }

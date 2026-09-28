@@ -4,6 +4,7 @@ import { DIFFICULTIES, starsFor, type Difficulty } from './memoryLogic'
 import { MemoryCard } from './MemoryCard'
 import { useMemoryGame } from './useMemoryGame'
 import { fitBoard } from '../../lib/fitBoard'
+import { useSoundOnIncrease, useSoundWhen } from '../../lib/sound'
 
 function formatTime(seconds: number) {
   const m = Math.floor(seconds / 60)
@@ -19,6 +20,9 @@ interface MemoryBoardProps {
 export function MemoryBoard({ difficulty, onChangeDifficulty }: MemoryBoardProps) {
   const { cards, flipped, matched, moves, won, pairs, seconds, best, isNewRecord, flip, restart } =
     useMemoryGame(difficulty)
+  useSoundOnIncrease(matched.length, 'correct')
+  useSoundWhen(flipped.length === 2, 'wrong')
+  useSoundWhen(won, 'win')
   const { columns, label } = DIFFICULTIES[difficulty]
   const stars = starsFor(moves, pairs)
 

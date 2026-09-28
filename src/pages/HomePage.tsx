@@ -2,12 +2,16 @@ import { motion } from 'framer-motion'
 import { BookOpen, Gamepad2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { BigChoiceCard } from '../components/BigChoiceCard'
+import { SoundToggle } from '../components/SoundControls'
 
 export function HomePage() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-violet-100 via-white to-sky-100 px-4 py-10">
+    <main className="relative flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-violet-100 via-white to-sky-100 px-4 py-10">
+      <div className="absolute left-4 top-4">
+        <SoundToggle />
+      </div>
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -35,6 +39,6 @@ export function HomePage() {
           onClick={() => navigate('/games')}
         />
       </div>
-    </div>
+    </main>
   )
 }

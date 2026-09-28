@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import type { Round, Feedback } from './types'
 import { wordTiles } from './words'
+import { SpeakButton } from '../../components/SoundControls'
 
 interface WordDisplayProps {
   round: Round
@@ -26,6 +27,9 @@ export function WordDisplay({ round, feedback }: WordDisplayProps) {
       >
         {round.emoji}
       </motion.div>
+      <div className="-mt-3">
+        <SpeakButton text={round.word} label="הקראת המילה" />
+      </div>
 
       <div className="w-full" style={{ containerType: 'inline-size' }}>
         <div className="flex w-full justify-center gap-[min(0.5rem,1.5cqw)]" dir="rtl">

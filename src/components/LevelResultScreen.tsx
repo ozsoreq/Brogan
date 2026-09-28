@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion'
 import { ArrowLeft, Home, RotateCcw } from 'lucide-react'
+import { useEffect } from 'react'
+import { play } from '../lib/sound'
 
 interface LevelResultScreenProps {
   level: number
@@ -29,6 +31,10 @@ export function LevelResultScreen({
   onBackToLevels,
 }: LevelResultScreenProps) {
   const isFinalLevel = level >= totalLevels
+
+  useEffect(() => {
+    if (passed) play('win')
+  }, [passed])
   const hasNextLevel = passed && !isFinalLevel
 
   let emoji = '💪'
