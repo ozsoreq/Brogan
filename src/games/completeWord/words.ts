@@ -1,3 +1,5 @@
+import { canShowEmoji } from '../../lib/emojiSupport'
+
 export interface WordEntry {
   word: string
   emoji: string
@@ -266,8 +268,9 @@ export function buildOptions(word: string, blankIndex: number): string[] {
   return shuffle([correctLetter, ...distractors])
 }
 
+// The picture is the only clue, so words whose emoji this device can't draw are left out.
 export function buildRounds(): Round[] {
-  return shuffle(WORD_BANK)
+  return shuffle(WORD_BANK.filter((entry) => canShowEmoji(entry.emoji)))
     .slice(0, ROUNDS_PER_GAME)
     .map((entry) => {
       const candidates = blankCandidates(entry.word)

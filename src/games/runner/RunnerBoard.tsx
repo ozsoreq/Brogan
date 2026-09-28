@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { RotateCcw, SlidersHorizontal } from 'lucide-react'
 import { PLAYER_SIZE, PLAYER_X, STAR_BONUS, WORLD_HEIGHT, type Difficulty, type ObstacleKind } from './runnerLogic'
+import { canShowEmoji } from '../../lib/emojiSupport'
 import { useRunnerGame } from './useRunnerGame'
 import { fitBoard } from '../../lib/fitBoard'
 import { PauseButton, PauseOverlay } from '../../components/Pause'
@@ -9,7 +10,8 @@ import { PauseButton, PauseOverlay } from '../../components/Pause'
 // The box's aspect ratio keeps one world unit the same size on both axes.
 const GROUND_PCT = 18
 const BOX_HEIGHT_UNITS = WORLD_HEIGHT / (1 - GROUND_PCT / 100)
-const OBSTACLE_EMOJI: Record<ObstacleKind, string> = { cactus: '🌵', rock: '🪨' }
+// 🪨 is a 2020 emoji; older phones get a second cactus instead of an empty box.
+const OBSTACLE_EMOJI: Record<ObstacleKind, string> = { cactus: '🌵', rock: canShowEmoji('🪨') ? '🪨' : '🌵' }
 const CLOUDS = [
   { x: 10, y: 80, size: 11 },
   { x: 55, y: 88, size: 8 },
