@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { usePause } from '../../lib/usePause'
 import { DIFFICULTIES, endStroke, initialState, slice, step, type Difficulty, type Segment } from './fruitLogic'
 
 const TRAIL_MS = 140
@@ -36,9 +37,10 @@ export function useFruitGame(difficulty: Difficulty) {
   const pendingEndStroke = useRef(false)
   const trailRef = useRef<TrailPoint[]>([])
   const lastPoint = useRef<{ x: number; y: number } | null>(null)
+  const { paused, pause, resume } = usePause(phase === 'playing')
 
   useEffect(() => {
-    if (phase !== 'playing') return
+    if (phase !== 'playing' || paused) return
     let frame = 0
     let last = performance.now()
     const loop = (now: number) => {
@@ -62,7 +64,7 @@ export function useFruitGame(difficulty: Difficulty) {
     }
     frame = requestAnimationFrame(loop)
     return () => cancelAnimationFrame(frame)
-  }, [phase, cfg])
+  }, [phase, paused, cfg])
 
   const isNewRecord = phase === 'over' && state.score > 0 && (bestAtStart === null || state.score > bestAtStart)
   const best = isNewRecord ? state.score : bestAtStart
@@ -94,12 +96,12 @@ export function useFruitGame(difficulty: Difficulty) {
         start()
         return
       }
-      if (phase !== 'playing') return
+      if (phase !== 'playing' || paused) return
       lastPoint.current = { x, y }
       pendingSegments.current.push({ x1: x, y1: y, x2: x, y2: y })
       trailRef.current = [{ x, y, t: performance.now() }]
     },
-    [phase, start],
+    [phase, paused, start],
   )
 
   const pointerMove = useCallback((x: number, y: number) => {
@@ -115,5 +117,5 @@ export function useFruitGame(difficulty: Difficulty) {
     pendingEndStroke.current = true
   }, [])
 
-  return { cfg, state, phase, trail, best, isNewRecord, pointerDown, pointerMove, pointerUp, restart: start }
+  return { cfg, state, phase, trail, best, isNewRecord, pointerDown, pointerMove, pointerUp, restart: start, paused, pause, resume }
 }

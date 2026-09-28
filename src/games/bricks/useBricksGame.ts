@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { usePause } from '../../lib/usePause'
 import { DIFFICULTIES, initialState, launch, movePaddle, step, type Difficulty } from './bricksLogic'
 
 const KEYBOARD_PADDLE_SPEED = 90
@@ -29,10 +30,11 @@ export function useBricksGame(difficulty: Difficulty) {
   const targetX = useRef<number | null>(null)
   const pendingLaunch = useRef(false)
   const keys = useRef({ left: false, right: false })
+  const { paused, pause, resume } = usePause(phase === 'playing')
 
   // The ball rests on the paddle until launched, so the loop can run from the start.
   useEffect(() => {
-    if (phase !== 'playing') return
+    if (phase !== 'playing' || paused) return
     let frame = 0
     let last = performance.now()
     const loop = (now: number) => {
@@ -57,7 +59,7 @@ export function useBricksGame(difficulty: Difficulty) {
     }
     frame = requestAnimationFrame(loop)
     return () => cancelAnimationFrame(frame)
-  }, [phase, cfg])
+  }, [phase, paused, cfg])
 
   const isNewRecord = phase === 'over' && state.score > 0 && (bestAtStart === null || state.score > bestAtStart)
   const best = isNewRecord ? state.score : bestAtStart
@@ -82,14 +84,21 @@ export function useBricksGame(difficulty: Difficulty) {
   }, [cfg, difficulty])
 
   // Pointer input arrives in world units from the board: touching launches, dragging steers.
-  const pointerDown = useCallback((x: number) => {
-    targetX.current = x
-    pendingLaunch.current = true
-  }, [])
+  const pointerDown = useCallback(
+    (x: number) => {
+      if (paused) return
+      targetX.current = x
+      pendingLaunch.current = true
+    },
+    [paused],
+  )
 
-  const pointerMove = useCallback((x: number) => {
-    targetX.current = x
-  }, [])
+  const pointerMove = useCallback(
+    (x: number) => {
+      if (!paused) targetX.current = x
+    },
+    [paused],
+  )
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -108,5 +117,5 @@ export function useBricksGame(difficulty: Difficulty) {
     }
   }, [])
 
-  return { cfg, state, phase, best, isNewRecord, pointerDown, pointerMove, restart }
+  return { cfg, state, phase, best, isNewRecord, pointerDown, pointerMove, restart, paused, pause, resume }
 }

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { usePause } from '../../lib/usePause'
 import { DIFFICULTIES, initialState, ROUND_SECONDS, tick, whack, type Difficulty } from './whackLogic'
 
 const TICK_MS = 50
@@ -24,10 +25,13 @@ export function useWhackGame(difficulty: Difficulty) {
   const cfg = DIFFICULTIES[difficulty]
   const [phase, setPhase] = useState<Phase>('countdown')
   const [countdown, setCountdown] = useState(3)
-  const [state, setState] = useState(() => initialState(Date.now()))
+  const [state, setState] = useState(() => initialState(0))
   const [timeLeft, setTimeLeft] = useState(ROUND_SECONDS)
   const [bestAtStart, setBestAtStart] = useState(() => loadBest(difficulty))
-  const endAt = useRef(0)
+  // Game time in ms since the round started. It only advances while playing and
+  // not paused, so switching apps or pausing never eats into the 30 seconds.
+  const clock = useRef(0)
+  const { paused, pause, resume } = usePause(phase === 'playing')
 
   useEffect(() => {
     if (phase !== 'countdown') return
@@ -36,9 +40,8 @@ export function useWhackGame(difficulty: Difficulty) {
         setCountdown((c) => c - 1)
         return
       }
-      const now = Date.now()
-      endAt.current = now + ROUND_SECONDS * 1000
-      setState(initialState(now))
+      clock.current = 0
+      setState(initialState(0))
       setTimeLeft(ROUND_SECONDS)
       setPhase('playing')
     }, COUNTDOWN_STEP_MS)
@@ -46,20 +49,24 @@ export function useWhackGame(difficulty: Difficulty) {
   }, [phase, countdown])
 
   useEffect(() => {
-    if (phase !== 'playing') return
+    if (phase !== 'playing' || paused) return
+    let last = performance.now()
     const t = setInterval(() => {
-      const now = Date.now()
-      if (now >= endAt.current) {
+      const real = performance.now()
+      clock.current += real - last
+      last = real
+      const now = clock.current
+      if (now >= ROUND_SECONDS * 1000) {
         setTimeLeft(0)
         setState((s) => ({ ...s, holes: s.holes.map(() => null) }))
         setPhase('over')
         return
       }
-      setTimeLeft(Math.ceil((endAt.current - now) / 1000))
+      setTimeLeft(Math.ceil((ROUND_SECONDS * 1000 - now) / 1000))
       setState((s) => tick(s, now, cfg))
     }, TICK_MS)
     return () => clearInterval(t)
-  }, [phase, cfg])
+  }, [phase, paused, cfg])
 
   const isNewRecord = phase === 'over' && state.score > 0 && (bestAtStart === null || state.score > bestAtStart)
   const best = isNewRecord ? state.score : bestAtStart
@@ -75,19 +82,20 @@ export function useWhackGame(difficulty: Difficulty) {
 
   const whackAt = useCallback(
     (index: number) => {
-      if (phase !== 'playing') return
-      setState((s) => whack(s, index, Date.now()))
+      if (phase !== 'playing' || paused) return
+      setState((s) => whack(s, index, clock.current))
     },
-    [phase],
+    [phase, paused],
   )
 
   const restart = useCallback(() => {
     setBestAtStart(loadBest(difficulty))
-    setState(initialState(Date.now()))
+    clock.current = 0
+    setState(initialState(0))
     setTimeLeft(ROUND_SECONDS)
     setCountdown(3)
     setPhase('countdown')
   }, [difficulty])
 
-  return { cfg, phase, countdown, timeLeft, ...state, best, isNewRecord, whackAt, restart }
+  return { cfg, phase, countdown, timeLeft, ...state, best, isNewRecord, whackAt, restart, paused, pause, resume }
 }

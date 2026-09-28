@@ -3,6 +3,7 @@ import { RotateCcw, SlidersHorizontal } from 'lucide-react'
 import { PLAYER_SIZE, PLAYER_X, STAR_BONUS, WORLD_HEIGHT, type Difficulty, type ObstacleKind } from './runnerLogic'
 import { useRunnerGame } from './useRunnerGame'
 import { fitBoard } from '../../lib/fitBoard'
+import { PauseButton, PauseOverlay } from '../../components/Pause'
 
 // The ground takes the bottom GROUND_PCT of the box; the world sits above it.
 // The box's aspect ratio keeps one world unit the same size on both axes.
@@ -24,14 +25,15 @@ interface RunnerBoardProps {
 }
 
 export function RunnerBoard({ character, difficulty, onChangeDifficulty }: RunnerBoardProps) {
-  const { cfg, state, phase, score, best, isNewRecord, press, restart } = useRunnerGame(difficulty)
+  const { cfg, state, phase, score, best, isNewRecord, press, restart, paused, pause, resume } = useRunnerGame(difficulty)
   const grounded = state.playerY <= 0
 
   return (
     <div className="flex w-full max-w-md flex-col gap-4">
-      <div className="flex items-center justify-between text-lg font-bold text-slate-700">
+      <div className="flex items-center justify-between gap-2 text-lg font-bold text-slate-700">
         <span>ניקוד: {score}</span>
         <span>⭐ {state.starsCollected}</span>
+        <PauseButton onPause={pause} disabled={phase !== 'playing'} />
       </div>
       <div
         role="button"
@@ -121,6 +123,7 @@ export function RunnerBoard({ character, difficulty, onChangeDifficulty }: Runne
             </p>
           </div>
         )}
+        {paused && <PauseOverlay onResume={resume} />}
       </div>
 
       {phase === 'over' ? (

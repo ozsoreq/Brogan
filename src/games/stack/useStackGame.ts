@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { usePause } from '../../lib/usePause'
 import { DIFFICULTIES, drop, initialState, step, type Difficulty } from './stackLogic'
 
 export type Phase = 'ready' | 'playing' | 'over'
@@ -25,10 +26,11 @@ export function useStackGame(difficulty: Difficulty) {
 
   const stateRef = useRef(state)
   const pendingDrop = useRef(false)
+  const { paused, pause, resume } = usePause(phase === 'playing')
 
   // Drops are applied inside the loop so they land exactly where the block is drawn.
   useEffect(() => {
-    if (phase !== 'playing') return
+    if (phase !== 'playing' || paused) return
     let frame = 0
     let last = performance.now()
     const loop = (now: number) => {
@@ -48,7 +50,7 @@ export function useStackGame(difficulty: Difficulty) {
     }
     frame = requestAnimationFrame(loop)
     return () => cancelAnimationFrame(frame)
-  }, [phase, cfg])
+  }, [phase, paused, cfg])
 
   const isNewRecord = phase === 'over' && state.score > 0 && (bestAtStart === null || state.score > bestAtStart)
   const best = isNewRecord ? state.score : bestAtStart
@@ -73,9 +75,10 @@ export function useStackGame(difficulty: Difficulty) {
 
   // One button for everything: the first tap starts, every tap after that drops a block.
   const tap = useCallback(() => {
+    if (paused) return
     if (phase === 'ready') setPhase('playing')
     else if (phase === 'playing') pendingDrop.current = true
-  }, [phase])
+  }, [phase, paused])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -88,5 +91,5 @@ export function useStackGame(difficulty: Difficulty) {
     return () => window.removeEventListener('keydown', onKey)
   }, [tap])
 
-  return { cfg, state, phase, best, isNewRecord, tap, restart }
+  return { cfg, state, phase, best, isNewRecord, tap, restart, paused, pause, resume }
 }

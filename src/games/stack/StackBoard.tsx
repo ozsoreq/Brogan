@@ -3,6 +3,7 @@ import { RotateCcw, SlidersHorizontal } from 'lucide-react'
 import { BLOCK_HEIGHT, PERFECT_POINTS, WORLD_WIDTH, type Block, type Difficulty } from './stackLogic'
 import { useStackGame } from './useStackGame'
 import { fitBoard } from '../../lib/fitBoard'
+import { PauseButton, PauseOverlay } from '../../components/Pause'
 
 const VIEW_HEIGHT = 140
 const GROUND = 10
@@ -65,7 +66,7 @@ interface StackBoardProps {
 }
 
 export function StackBoard({ difficulty, onChangeDifficulty }: StackBoardProps) {
-  const { cfg, state, phase, best, isNewRecord, tap, restart } = useStackGame(difficulty)
+  const { cfg, state, phase, best, isNewRecord, tap, restart, paused, pause, resume } = useStackGame(difficulty)
   const floors = state.placed.length - 1
   const movingLevel = state.placed.length
   const cameraY = Math.max(0, GROUND + movingLevel * BLOCK_HEIGHT - FOCUS_Y)
@@ -73,10 +74,11 @@ export function StackBoard({ difficulty, onChangeDifficulty }: StackBoardProps) 
 
   return (
     <div className="flex w-full max-w-md flex-col gap-3">
-      <div className="flex items-center justify-between text-lg font-bold text-slate-700">
+      <div className="flex items-center justify-between gap-2 text-lg font-bold text-slate-700">
         <span>ניקוד: {state.score}</span>
         <span>🏢 {floors}</span>
         {best !== null && <span className="text-sm font-medium text-slate-500">שיא: {best}</span>}
+        <PauseButton onPause={pause} disabled={phase !== 'playing'} />
       </div>
 
       <div
@@ -174,6 +176,7 @@ export function StackBoard({ difficulty, onChangeDifficulty }: StackBoardProps) 
             </p>
           </div>
         )}
+        {paused && <PauseOverlay onResume={resume} />}
       </div>
 
       {phase === 'over' && (

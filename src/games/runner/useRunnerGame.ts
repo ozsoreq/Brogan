@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { usePause } from '../../lib/usePause'
 import { DIFFICULTIES, initialState, isGrounded, score, step, type Difficulty } from './runnerLogic'
 
 // A tap slightly before landing still counts, so jumps don't feel "eaten".
@@ -27,9 +28,10 @@ export function useRunnerGame(difficulty: Difficulty) {
   const [bestAtStart, setBestAtStart] = useState(() => loadBest(difficulty))
   const stateRef = useRef(state)
   const jumpRequestedAt = useRef(-Infinity)
+  const { paused, pause, resume } = usePause(phase === 'playing')
 
   useEffect(() => {
-    if (phase !== 'playing') return
+    if (phase !== 'playing' || paused) return
     let frame = 0
     let last = performance.now()
     const loop = (now: number) => {
@@ -49,7 +51,7 @@ export function useRunnerGame(difficulty: Difficulty) {
     }
     frame = requestAnimationFrame(loop)
     return () => cancelAnimationFrame(frame)
-  }, [phase, cfg])
+  }, [phase, paused, cfg])
 
   const finalScore = score(state)
   const isNewRecord = phase === 'over' && finalScore > 0 && (bestAtStart === null || finalScore > bestAtStart)
@@ -75,9 +77,10 @@ export function useRunnerGame(difficulty: Difficulty) {
 
   // One control for everything: tap to start, tap to jump.
   const press = useCallback(() => {
+    if (paused) return
     if (phase === 'ready') start()
     else if (phase === 'playing') jumpRequestedAt.current = performance.now()
-  }, [phase, start])
+  }, [phase, paused, start])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -90,5 +93,5 @@ export function useRunnerGame(difficulty: Difficulty) {
     return () => window.removeEventListener('keydown', onKey)
   }, [press])
 
-  return { cfg, state, phase, score: finalScore, best, isNewRecord, press, restart: start }
+  return { cfg, state, phase, score: finalScore, best, isNewRecord, press, restart: start, paused, pause, resume }
 }

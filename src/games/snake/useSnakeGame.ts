@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { usePause } from '../../lib/usePause'
 import { DIFFICULTIES, initialState, tick, tickInterval, turn, type Difficulty, type Direction } from './snakeLogic'
 
 export type Phase = 'ready' | 'playing' | 'over'
@@ -30,6 +31,7 @@ export function useSnakeGame(difficulty: Difficulty) {
   const [phase, setPhase] = useState<Phase>('ready')
   const [bestAtStart, setBestAtStart] = useState(() => loadBest(difficulty))
   const stateRef = useRef(state)
+  const { paused, pause, resume } = usePause(phase === 'playing')
 
   const update = useCallback((next: typeof state) => {
     stateRef.current = next
@@ -37,7 +39,7 @@ export function useSnakeGame(difficulty: Difficulty) {
   }, [])
 
   useEffect(() => {
-    if (phase !== 'playing') return
+    if (phase !== 'playing' || paused) return
     let timer: ReturnType<typeof setTimeout>
     const loop = () => {
       const next = tick(stateRef.current, cfg)
@@ -50,7 +52,7 @@ export function useSnakeGame(difficulty: Difficulty) {
     }
     timer = setTimeout(loop, tickInterval(stateRef.current, cfg))
     return () => clearTimeout(timer)
-  }, [phase, cfg, update])
+  }, [phase, paused, cfg, update])
 
   const isNewRecord = phase === 'over' && state.score > 0 && (bestAtStart === null || state.score > bestAtStart)
   const best = isNewRecord ? state.score : bestAtStart
@@ -73,11 +75,11 @@ export function useSnakeGame(difficulty: Difficulty) {
   // The first direction pressed also starts the game.
   const steer = useCallback(
     (dir: Direction) => {
-      if (phase === 'over') return
+      if (phase === 'over' || paused) return
       update(turn(stateRef.current, dir))
       if (phase === 'ready') setPhase('playing')
     },
-    [phase, update],
+    [phase, paused, update],
   )
 
   useEffect(() => {
@@ -91,5 +93,5 @@ export function useSnakeGame(difficulty: Difficulty) {
     return () => window.removeEventListener('keydown', onKey)
   }, [steer])
 
-  return { cfg, state, phase, best, isNewRecord, steer, restart }
+  return { cfg, state, phase, best, isNewRecord, steer, restart, paused, pause, resume }
 }

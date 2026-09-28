@@ -4,6 +4,7 @@ import { useRef, type PointerEvent } from 'react'
 import { START_LIVES, timeLeft, WORLD_HEIGHT, WORLD_WIDTH, type Difficulty } from './fruitLogic'
 import { useFruitGame } from './useFruitGame'
 import { fitBoard } from '../../lib/fitBoard'
+import { PauseButton, PauseOverlay } from '../../components/Pause'
 
 const leftPct = (x: number) => (x / WORLD_WIDTH) * 100
 const bottomPct = (y: number) => (y / WORLD_HEIGHT) * 100
@@ -14,7 +15,7 @@ interface FruitBoardProps {
 }
 
 export function FruitBoard({ difficulty, onChangeDifficulty }: FruitBoardProps) {
-  const { cfg, state, phase, trail, best, isNewRecord, pointerDown, pointerMove, pointerUp, restart } =
+  const { cfg, state, phase, trail, best, isNewRecord, pointerDown, pointerMove, pointerUp, restart, paused, pause, resume } =
     useFruitGame(difficulty)
   const boxRef = useRef<HTMLDivElement>(null)
 
@@ -30,7 +31,7 @@ export function FruitBoard({ difficulty, onChangeDifficulty }: FruitBoardProps) 
 
   return (
     <div className="flex w-full max-w-md flex-col gap-3">
-      <div className="flex items-center justify-between text-lg font-bold text-slate-700">
+      <div className="flex items-center justify-between gap-2 text-lg font-bold text-slate-700">
         <span>ניקוד: {state.score}</span>
         <span aria-label={`${state.lives} לבבות`}>
           {'❤️'.repeat(state.lives)}
@@ -39,6 +40,7 @@ export function FruitBoard({ difficulty, onChangeDifficulty }: FruitBoardProps) 
         <span dir="ltr" className={timeLeft(state) <= 10 && phase === 'playing' ? 'text-rose-500' : ''}>
           ⏱ {timeLeft(state)}
         </span>
+        <PauseButton onPause={pause} disabled={phase !== 'playing'} />
       </div>
 
       <div
@@ -145,6 +147,7 @@ export function FruitBoard({ difficulty, onChangeDifficulty }: FruitBoardProps) 
             <p style={{ fontSize: '4.5cqw' }}>החליקו את האצבע על הפירות, והיזהרו מהפצצות 💣</p>
           </div>
         )}
+        {paused && <PauseOverlay onResume={resume} />}
       </div>
 
       {phase === 'over' && (

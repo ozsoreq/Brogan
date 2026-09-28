@@ -3,6 +3,7 @@ import { RotateCcw, SlidersHorizontal } from 'lucide-react'
 import { BOMB_PENALTY, ROUND_SECONDS, starsFor, type Difficulty, type Hole } from './whackLogic'
 import { useWhackGame } from './useWhackGame'
 import { fitBoard } from '../../lib/fitBoard'
+import { PauseButton, PauseOverlay } from '../../components/Pause'
 
 const HOLE_EMOJI: Record<Hole['kind'], string> = { mole: '🐹', bomb: '💣', hit: '⭐', boom: '💥' }
 
@@ -12,7 +13,7 @@ interface WhackBoardProps {
 }
 
 export function WhackBoard({ difficulty, onChangeDifficulty }: WhackBoardProps) {
-  const { cfg, phase, countdown, timeLeft, holes, score, hits, bombsHit, best, isNewRecord, whackAt, restart } =
+  const { cfg, phase, countdown, timeLeft, holes, score, hits, bombsHit, best, isNewRecord, whackAt, restart, paused, pause, resume } =
     useWhackGame(difficulty)
 
   if (phase === 'over') {
@@ -62,11 +63,12 @@ export function WhackBoard({ difficulty, onChangeDifficulty }: WhackBoardProps) 
 
   return (
     <div className="relative flex w-full max-w-md flex-col gap-4">
-      <div className="flex items-center justify-between text-lg font-bold text-slate-700">
+      <div className="flex items-center justify-between gap-2 text-lg font-bold text-slate-700">
         <span>ניקוד: {score}</span>
         <span dir="ltr" className={timeLeft <= 5 && phase === 'playing' ? 'text-rose-500' : ''}>
           ⏱ {timeLeft}
         </span>
+        <PauseButton onPause={pause} disabled={phase !== 'playing'} />
       </div>
       <div className="h-2 w-full overflow-hidden rounded-full bg-orange-100">
         <div
@@ -76,7 +78,7 @@ export function WhackBoard({ difficulty, onChangeDifficulty }: WhackBoardProps) 
       </div>
 
       <div
-        className="grid w-full grid-cols-3 gap-3 rounded-3xl bg-gradient-to-b from-lime-200 to-green-300 p-4 shadow-inner"
+        className="relative grid w-full grid-cols-3 gap-3 rounded-3xl bg-gradient-to-b from-lime-200 to-green-300 p-4 shadow-inner"
         style={fitBoard('224px')}
       >
         {holes.map((hole, index) => (
@@ -106,6 +108,7 @@ export function WhackBoard({ difficulty, onChangeDifficulty }: WhackBoardProps) 
             </AnimatePresence>
           </button>
         ))}
+        {paused && <PauseOverlay onResume={resume} />}
       </div>
 
       <p className="text-center text-sm text-slate-500">

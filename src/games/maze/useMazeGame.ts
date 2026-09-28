@@ -137,6 +137,17 @@ export function useMazeGame(difficulty: Difficulty) {
 
   useEffect(() => () => clearTimeout(hintTimer.current), [])
 
+  // The clock stops while the app is in the background, and restarts on the next move.
+  useEffect(() => {
+    const onVisibility = () => {
+      const r = runRef.current
+      if (!document.hidden || r.phase !== 'playing' || r.levelStart === null) return
+      update({ ...r, elapsedMs: r.elapsedMs + (performance.now() - r.levelStart), levelStart: null })
+    }
+    document.addEventListener('visibilitychange', onVisibility)
+    return () => document.removeEventListener('visibilitychange', onVisibility)
+  }, [update])
+
   const move = useCallback(
     (dir: Direction) => {
       const r = runRef.current

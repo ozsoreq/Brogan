@@ -5,6 +5,7 @@ import { useSwipe } from '../../lib/useSwipe'
 import { BONUS_POINTS, type Difficulty } from './snakeLogic'
 import { useSnakeGame } from './useSnakeGame'
 import { fitBoard } from '../../lib/fitBoard'
+import { PauseButton, PauseOverlay } from '../../components/Pause'
 
 interface SnakeBoardProps {
   difficulty: Difficulty
@@ -12,7 +13,7 @@ interface SnakeBoardProps {
 }
 
 export function SnakeBoard({ difficulty, onChangeDifficulty }: SnakeBoardProps) {
-  const { cfg, state, phase, best, isNewRecord, steer, restart } = useSnakeGame(difficulty)
+  const { cfg, state, phase, best, isNewRecord, steer, restart, paused, pause, resume } = useSnakeGame(difficulty)
   const cell = 100 / state.size
   const pos = (p: { x: number; y: number }) => ({
     left: `${p.x * cell}%`,
@@ -28,10 +29,11 @@ export function SnakeBoard({ difficulty, onChangeDifficulty }: SnakeBoardProps) 
 
   return (
     <div className="flex w-full max-w-md flex-col gap-3">
-      <div className="flex items-center justify-between text-lg font-bold text-slate-700">
+      <div className="flex items-center justify-between gap-2 text-lg font-bold text-slate-700">
         <span>ניקוד: {state.score}</span>
         <span>🍎 {state.apples}</span>
         {best !== null && <span className="text-sm font-medium text-slate-500">שיא: {best}</span>}
+        <PauseButton onPause={pause} disabled={phase !== 'playing'} />
       </div>
 
       <div
@@ -105,6 +107,7 @@ export function SnakeBoard({ difficulty, onChangeDifficulty }: SnakeBoardProps) 
             </p>
           </div>
         )}
+        {paused && <PauseOverlay onResume={resume} />}
       </div>
 
       {phase === 'over' ? (

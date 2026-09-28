@@ -15,6 +15,7 @@ import {
 } from './bricksLogic'
 import { useBricksGame } from './useBricksGame'
 import { fitBoard } from '../../lib/fitBoard'
+import { PauseButton, PauseOverlay } from '../../components/Pause'
 
 const ROW_COLORS = ['#f43f5e', '#f97316', '#facc15', '#22c55e', '#06b6d4', '#3b82f6', '#a855f7', '#ec4899']
 
@@ -35,7 +36,7 @@ interface BricksBoardProps {
 }
 
 export function BricksBoard({ difficulty, onChangeDifficulty }: BricksBoardProps) {
-  const { cfg, state, phase, best, isNewRecord, pointerDown, pointerMove, restart } = useBricksGame(difficulty)
+  const { cfg, state, phase, best, isNewRecord, pointerDown, pointerMove, restart, paused, pause, resume } = useBricksGame(difficulty)
   const boxRef = useRef<HTMLDivElement>(null)
 
   const toWorldX = (e: PointerEvent) => {
@@ -45,13 +46,14 @@ export function BricksBoard({ difficulty, onChangeDifficulty }: BricksBoardProps
 
   return (
     <div className="flex w-full max-w-md flex-col gap-3">
-      <div className="flex items-center justify-between text-lg font-bold text-slate-700">
+      <div className="flex items-center justify-between gap-2 text-lg font-bold text-slate-700">
         <span>ניקוד: {state.score}</span>
         <span>שלב {state.stage}</span>
         <span aria-label={`${state.lives} לבבות`}>
           {'❤️'.repeat(state.lives)}
           <span className="opacity-25">{'❤️'.repeat(cfg.lives - state.lives)}</span>
         </span>
+        <PauseButton onPause={pause} disabled={phase !== 'playing'} />
       </div>
 
       <div
@@ -150,6 +152,7 @@ export function BricksBoard({ difficulty, onChangeDifficulty }: BricksBoardProps
             </p>
           </div>
         )}
+        {paused && <PauseOverlay onResume={resume} />}
       </div>
 
       {phase === 'over' && (
