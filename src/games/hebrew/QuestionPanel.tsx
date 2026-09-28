@@ -20,9 +20,9 @@ export function QuestionPanel({
   const correctOption = question.options[question.correctIndex]
 
   return (
-    <div className="flex w-full flex-col gap-4">
+    <div className="flex w-full flex-col gap-3">
       <p className="text-xl font-bold text-slate-800">{question.prompt}</p>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2">
         {question.options.map((option, index) => {
           const isSelected = option === selectedOption
           const isCorrectOption = option === correctOption
@@ -50,7 +50,7 @@ export function QuestionPanel({
               onClick={() => onSelect(option)}
               whileTap={{ scale: 0.97 }}
               whileHover={locked ? {} : { scale: 1.01 }}
-              className={`rounded-2xl px-5 py-4 text-right text-lg font-semibold transition-colors duration-200 ${tileStyle} disabled:cursor-default`}
+              className={`rounded-2xl px-5 py-3 text-right text-lg font-semibold transition-colors duration-200 ${tileStyle} disabled:cursor-default`}
             >
               {option}
             </motion.button>

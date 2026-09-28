@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AppHeader } from '../../components/AppHeader'
 import { FeedbackOverlay } from '../../components/FeedbackOverlay'
@@ -37,11 +37,17 @@ export function HebrewLevelPlay({ level, unlockUpTo }: HebrewLevelPlayProps) {
     if (finished && passed) unlockUpTo(level + 1)
   }, [finished, passed, level, unlockUpTo])
 
+  // Keep the current question in view when the next one replaces it.
+  const questionRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (currentIndex > 0) questionRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+  }, [currentIndex])
+
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-amber-50 via-white to-sky-50">
       <AppHeader title={`עברית · שלב ${level}`} onBack={() => navigate('/learning/hebrew')} />
 
-      <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center gap-6 px-4 py-6">
+      <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center gap-4 px-4 py-4">
         {finished ? (
           <LevelResultScreen
             level={level}
@@ -85,7 +91,8 @@ export function HebrewLevelPlay({ level, unlockUpTo }: HebrewLevelPlayProps) {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.25 }}
-                  className="w-full"
+                  ref={questionRef}
+                  className="w-full scroll-mb-4"
                 >
                   <QuestionPanel
                     question={currentQuestion}
