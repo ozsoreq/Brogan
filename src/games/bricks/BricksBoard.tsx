@@ -14,6 +14,7 @@ import {
   type Difficulty,
 } from './bricksLogic'
 import { useBricksGame } from './useBricksGame'
+import { fitBoard } from '../../lib/fitBoard'
 
 const ROW_COLORS = ['#f43f5e', '#f97316', '#facc15', '#22c55e', '#06b6d4', '#3b82f6', '#a855f7', '#ec4899']
 
@@ -67,7 +68,12 @@ export function BricksBoard({ difficulty, onChangeDifficulty }: BricksBoardProps
         }}
         dir="ltr"
         className="relative w-full select-none overflow-hidden rounded-3xl bg-gradient-to-b from-indigo-950 via-indigo-900 to-violet-900 shadow-lg"
-        style={{ aspectRatio: `${WORLD_WIDTH} / ${WORLD_HEIGHT}`, containerType: 'inline-size', touchAction: 'none' }}
+        style={{
+          aspectRatio: `${WORLD_WIDTH} / ${WORLD_HEIGHT}`,
+          containerType: 'inline-size',
+          touchAction: 'none',
+          ...fitBoard('144px', WORLD_WIDTH / WORLD_HEIGHT),
+        }}
       >
         {state.bricks.map((b) => {
           const r = brickRect(b)

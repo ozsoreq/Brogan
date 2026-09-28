@@ -3,6 +3,7 @@ import { RotateCcw, SlidersHorizontal } from 'lucide-react'
 import { DIFFICULTIES, starsFor, type Difficulty } from './memoryLogic'
 import { MemoryCard } from './MemoryCard'
 import { useMemoryGame } from './useMemoryGame'
+import { fitBoard } from '../../lib/fitBoard'
 
 function formatTime(seconds: number) {
   const m = Math.floor(seconds / 60)
@@ -80,7 +81,10 @@ export function MemoryBoard({ difficulty, onChangeDifficulty }: MemoryBoardProps
         <span dir="ltr">⏱ {formatTime(seconds)}</span>
       </div>
 
-      <div className="grid gap-2 sm:gap-3" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>
+      <div
+        className="grid w-full gap-2 sm:gap-3"
+        style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, ...fitBoard('244px', columns / (cards.length / columns)) }}
+      >
         {cards.map((card, index) => (
           <MemoryCard
             key={card.id}

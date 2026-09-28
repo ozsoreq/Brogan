@@ -27,3 +27,20 @@ body {
 .runner-bob {
   animation: runner-bob 0.16s ease-in-out infinite alternate;
 }
+
+/* Short screens (small phones, iPhone SE): game controls switch to compact layouts. */
+@custom-variant short (@media (max-height: 760px));
+
+/* Phones held sideways: games show a "rotate your phone" screen instead. */
+@custom-variant phone-landscape (@media (orientation: landscape) and (max-height: 500px));
+
+:root {
+  /* Height of the on-screen arrow pad, used to fit game boards above it. */
+  --pad-h: 208px;
+}
+
+@media (max-height: 760px) {
+  :root {
+    --pad-h: 56px;
+  }
+}

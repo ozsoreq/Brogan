@@ -4,6 +4,7 @@ import { DirectionPad } from '../../components/DirectionPad'
 import { useSwipe } from '../../lib/useSwipe'
 import { goalOf, HINT_PENALTY_SECONDS, isOpen, type Difficulty, type Maze, type Point } from './mazeLogic'
 import { formatTime, useMazeGame } from './useMazeGame'
+import { fitBoard } from '../../lib/fitBoard'
 
 const WALL = 0.14
 
@@ -44,12 +45,27 @@ export function MazeBoard({ difficulty, onChangeDifficulty }: MazeBoardProps) {
 
   return (
     <div className="flex w-full max-w-md flex-col gap-3">
-      <div className="flex items-center justify-between text-lg font-bold text-slate-700">
-        <span>
+      <div className="flex items-center justify-between gap-2 text-base font-bold text-slate-700 sm:text-lg">
+        <span className="whitespace-nowrap">
           שלב {run.levelIndex + 1}/{cfg.sizes.length}
         </span>
-        <span dir="ltr">⏱ {formatTime(seconds)}</span>
-        <span>⭐ {run.starsCollected}</span>
+        <span dir="ltr" className="whitespace-nowrap">⏱ {formatTime(seconds)}</span>
+        <span className="whitespace-nowrap">⭐ {run.starsCollected}</span>
+        {run.phase !== 'finished' && (
+          <button
+            type="button"
+            onClick={hint}
+            disabled={run.phase !== 'playing'}
+            aria-label={`רמז - מראה את הדרך, ומוסיף ${HINT_PENALTY_SECONDS} שניות`}
+            className="flex min-h-11 items-center gap-1 whitespace-nowrap rounded-full bg-amber-100 px-2.5 text-sm font-semibold sm:text-base text-amber-800 shadow-sm active:scale-95 disabled:opacity-50"
+          >
+            <Lightbulb className="h-5 w-5" aria-hidden />
+            רמז
+            <span className="text-xs font-normal" dir="ltr">
+              ⏱+{HINT_PENALTY_SECONDS}
+            </span>
+          </button>
+        )}
       </div>
 
       <div
@@ -58,7 +74,7 @@ export function MazeBoard({ difficulty, onChangeDifficulty }: MazeBoardProps) {
         {...swipe}
         dir="ltr"
         className="relative aspect-square w-full select-none overflow-hidden rounded-3xl border-4 border-violet-300 bg-amber-50 shadow-lg"
-        style={{ touchAction: 'none', containerType: 'inline-size' }}
+        style={{ touchAction: 'none', containerType: 'inline-size', ...fitBoard('calc(176px + var(--pad-h))') }}
       >
         <svg
           aria-hidden
@@ -165,21 +181,7 @@ export function MazeBoard({ difficulty, onChangeDifficulty }: MazeBoardProps) {
           </div>
         </motion.div>
       ) : (
-        <div className="flex items-center justify-center gap-6">
-          <button
-            type="button"
-            onClick={hint}
-            disabled={run.phase !== 'playing'}
-            className="flex flex-col items-center gap-1 rounded-2xl bg-amber-100 px-3 py-2 text-sm font-semibold text-amber-800 shadow-sm active:scale-95 disabled:opacity-50"
-          >
-            <Lightbulb className="h-6 w-6" aria-hidden />
-            רמז
-            <span className="text-xs font-normal" dir="rtl">
-              (+{HINT_PENALTY_SECONDS} שניות)
-            </span>
-          </button>
-          <DirectionPad onPress={move} color="bg-violet-500 active:bg-violet-600" />
-        </div>
+        <DirectionPad onPress={move} color="bg-violet-500 active:bg-violet-600" />
       )}
     </div>
   )

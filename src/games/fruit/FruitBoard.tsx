@@ -3,6 +3,7 @@ import { RotateCcw, SlidersHorizontal } from 'lucide-react'
 import { useRef, type PointerEvent } from 'react'
 import { START_LIVES, timeLeft, WORLD_HEIGHT, WORLD_WIDTH, type Difficulty } from './fruitLogic'
 import { useFruitGame } from './useFruitGame'
+import { fitBoard } from '../../lib/fitBoard'
 
 const leftPct = (x: number) => (x / WORLD_WIDTH) * 100
 const bottomPct = (y: number) => (y / WORLD_HEIGHT) * 100
@@ -58,7 +59,12 @@ export function FruitBoard({ difficulty, onChangeDifficulty }: FruitBoardProps) 
         onPointerUp={pointerUp}
         onPointerCancel={pointerUp}
         className="relative w-full select-none overflow-hidden rounded-3xl bg-gradient-to-b from-amber-800 via-amber-900 to-stone-900 shadow-lg"
-        style={{ aspectRatio: `${WORLD_WIDTH} / ${WORLD_HEIGHT}`, containerType: 'inline-size', touchAction: 'none' }}
+        style={{
+          aspectRatio: `${WORLD_WIDTH} / ${WORLD_HEIGHT}`,
+          containerType: 'inline-size',
+          touchAction: 'none',
+          ...fitBoard('144px', WORLD_WIDTH / WORLD_HEIGHT),
+        }}
       >
         <div
           aria-hidden

@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { RotateCcw, Users } from 'lucide-react'
 import { PLAYER_SIZE, PLAYER_X, STAR_BONUS, WORLD_HEIGHT, type ObstacleKind } from './runnerLogic'
 import { useRunnerGame } from './useRunnerGame'
+import { fitBoard } from '../../lib/fitBoard'
 
 // The ground takes the bottom GROUND_PCT of the box; the world sits above it.
 // The box's aspect ratio keeps one world unit the same size on both axes.
@@ -40,7 +41,7 @@ export function RunnerBoard({ character, onChangeCharacter }: RunnerBoardProps) 
           press()
         }}
         className="relative w-full touch-manipulation select-none overflow-hidden rounded-3xl bg-gradient-to-b from-sky-300 via-sky-200 to-amber-50 shadow-lg"
-        style={{ aspectRatio: `100 / ${BOX_HEIGHT_UNITS}`, containerType: 'inline-size' }}
+        style={{ aspectRatio: `100 / ${BOX_HEIGHT_UNITS}`, containerType: 'inline-size', ...fitBoard('228px', 100 / BOX_HEIGHT_UNITS) }}
       >
         <span className="absolute right-[6%] top-[6%]" style={{ fontSize: '10cqw' }} aria-hidden>
           ☀️

@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { RotateCcw, SlidersHorizontal } from 'lucide-react'
 import { COLS, COMPUTER, DIFFICULTIES, landingRow, PLAYER, ROWS, type Difficulty } from './connect4Logic'
 import { useConnect4 } from './useConnect4'
+import { fitBoard } from '../../lib/fitBoard'
 
 const DISC_COLOR = {
   [PLAYER]: 'bg-rose-500 shadow-[inset_0_-4px_0_rgba(0,0,0,0.25),inset_0_3px_0_rgba(255,255,255,0.35)]',
@@ -51,7 +52,7 @@ export function Connect4Board({ difficulty, onChangeDifficulty }: Connect4BoardP
         {status}
       </p>
 
-      <div dir="ltr" className="flex flex-col gap-1">
+      <div dir="ltr" className="flex w-full flex-col gap-1" style={fitBoard('276px', COLS / ROWS)}>
         <div className="grid grid-cols-7 px-2" aria-hidden>
           {Array.from({ length: COLS }, (_, c) => (
             <span

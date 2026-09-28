@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { RotateCcw, SlidersHorizontal } from 'lucide-react'
 import { BOMB_PENALTY, ROUND_SECONDS, starsFor, type Difficulty, type Hole } from './whackLogic'
 import { useWhackGame } from './useWhackGame'
+import { fitBoard } from '../../lib/fitBoard'
 
 const HOLE_EMOJI: Record<Hole['kind'], string> = { mole: '🐹', bomb: '💣', hit: '⭐', boom: '💥' }
 
@@ -74,7 +75,10 @@ export function WhackBoard({ difficulty, onChangeDifficulty }: WhackBoardProps) 
         />
       </div>
 
-      <div className="grid grid-cols-3 gap-3 rounded-3xl bg-gradient-to-b from-lime-200 to-green-300 p-4 shadow-inner">
+      <div
+        className="grid w-full grid-cols-3 gap-3 rounded-3xl bg-gradient-to-b from-lime-200 to-green-300 p-4 shadow-inner"
+        style={fitBoard('224px')}
+      >
         {holes.map((hole, index) => (
           <button
             key={index}

@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { RotateCcw, SlidersHorizontal } from 'lucide-react'
 import { BLOCK_HEIGHT, PERFECT_POINTS, WORLD_WIDTH, type Block, type Difficulty } from './stackLogic'
 import { useStackGame } from './useStackGame'
+import { fitBoard } from '../../lib/fitBoard'
 
 const VIEW_HEIGHT = 140
 const GROUND = 10
@@ -90,6 +91,7 @@ export function StackBoard({ difficulty, onChangeDifficulty }: StackBoardProps) 
         className="relative w-full select-none overflow-hidden rounded-3xl shadow-lg"
         style={{
           aspectRatio: `${WORLD_WIDTH} / ${VIEW_HEIGHT}`,
+          ...fitBoard('144px', WORLD_WIDTH / VIEW_HEIGHT),
           containerType: 'inline-size',
           touchAction: 'manipulation',
           backgroundColor: skyColor(floors),

@@ -4,6 +4,7 @@ import { DirectionPad } from '../../components/DirectionPad'
 import { useSwipe } from '../../lib/useSwipe'
 import { BONUS_POINTS, type Difficulty } from './snakeLogic'
 import { useSnakeGame } from './useSnakeGame'
+import { fitBoard } from '../../lib/fitBoard'
 
 interface SnakeBoardProps {
   difficulty: Difficulty
@@ -47,6 +48,7 @@ export function SnakeBoard({ difficulty, onChangeDifficulty }: SnakeBoardProps) 
           backgroundSize: `${cell * 2}% ${cell * 2}%`,
           backgroundPosition: `0 0, ${cell}% ${cell}%`,
           containerType: 'inline-size',
+          ...fitBoard('calc(156px + var(--pad-h))'),
         }}
       >
         <span

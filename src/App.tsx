@@ -1,4 +1,5 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { RotateHint } from './components/RotateHint'
 import { HomePage } from './pages/HomePage'
 import { LearningPage } from './pages/LearningPage'
 import { GamesPage } from './pages/GamesPage'
@@ -18,8 +19,12 @@ import { Connect4Game } from './games/connect4/Connect4Game'
 import { MazeGame } from './games/maze/MazeGame'
 
 function App() {
+  const { pathname } = useLocation()
+
   return (
-    <Routes>
+    <>
+      {pathname.startsWith('/games/') && <RotateHint />}
+      <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/learning" element={<LearningPage />} />
       <Route path="/learning/complete-word" element={<CompleteWordGame />} />
@@ -38,7 +43,8 @@ function App() {
       <Route path="/games/connect4" element={<Connect4Game />} />
       <Route path="/games/maze" element={<MazeGame />} />
       <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+      </Routes>
+    </>
   )
 }
 
