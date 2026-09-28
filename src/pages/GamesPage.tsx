@@ -1,7 +1,64 @@
-import { Brain, BrickWall, Building2, Footprints, Grid3x3, Hammer, Route, Slice, Worm } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { AppHeader } from '../components/AppHeader'
-import { ModuleCard } from '../components/ModuleCard'
+
+interface GameEntry {
+  path: string
+  title: string
+  /** The game's own picture, so children who can't read yet can find it. */
+  art: string
+  gradient: string
+  isNew?: boolean
+}
+
+const THINKING: GameEntry[] = [
+  { path: 'maze', title: 'העכבר במבוך', art: '🐭🧀', gradient: 'from-violet-500 to-purple-700', isNew: true },
+  { path: 'connect4', title: 'ארבע בשורה', art: '🔴🟡', gradient: 'from-blue-500 to-blue-700' },
+  { path: 'memory', title: 'משחק הזיכרון', art: '🃏', gradient: 'from-fuchsia-500 to-pink-700' },
+]
+
+const QUICK: GameEntry[] = [
+  { path: 'stack', title: 'בונים מגדל', art: '🏗️', gradient: 'from-sky-500 to-sky-700' },
+  { path: 'bricks', title: 'שוברים לבנים', art: '🧱', gradient: 'from-indigo-500 to-indigo-700' },
+  { path: 'snake', title: 'הנחש הרעב', art: '🐍', gradient: 'from-emerald-500 to-emerald-700' },
+  { path: 'fruit', title: 'חותכים פירות', art: '🍉', gradient: 'from-rose-500 to-rose-700' },
+  { path: 'runner', title: 'רוץ, דינו, רוץ', art: '🦖', gradient: 'from-cyan-500 to-teal-700' },
+  { path: 'whack', title: 'תפסו את האוגר', art: '🐹', gradient: 'from-orange-500 to-orange-700' },
+]
+
+function GameTile({ game, onOpen }: { game: GameEntry; onOpen: () => void }) {
+  return (
+    <motion.button
+      type="button"
+      onClick={onOpen}
+      whileHover={{ scale: 1.03, y: -2 }}
+      whileTap={{ scale: 0.96 }}
+      className={`relative flex aspect-[4/3] flex-col items-center justify-center gap-2 rounded-3xl bg-gradient-to-br p-3 text-white shadow-md ${game.gradient}`}
+    >
+      {game.isNew && (
+        <span className="absolute left-2 top-2 rounded-full bg-amber-300 px-2 py-0.5 text-xs font-bold text-amber-950">חדש!</span>
+      )}
+      <span className="text-5xl leading-none drop-shadow-sm" aria-hidden>
+        {game.art}
+      </span>
+      <span className="text-center text-base font-bold leading-tight">{game.title}</span>
+    </motion.button>
+  )
+}
+
+function Section({ title, games }: { title: string; games: GameEntry[] }) {
+  const navigate = useNavigate()
+  return (
+    <section className="flex flex-col gap-3">
+      <h2 className="text-lg font-bold text-slate-700">{title}</h2>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        {games.map((game) => (
+          <GameTile key={game.path} game={game} onOpen={() => navigate(`/games/${game.path}`)} />
+        ))}
+      </div>
+    </section>
+  )
+}
 
 export function GamesPage() {
   const navigate = useNavigate()
@@ -10,70 +67,9 @@ export function GamesPage() {
     <div className="min-h-screen bg-gradient-to-b from-fuchsia-50 via-white to-white">
       <AppHeader title="משחקים" onBack={() => navigate('/')} />
 
-      <main className="mx-auto flex max-w-md flex-col gap-4 px-4 py-6">
-        <ModuleCard
-          title="העכבר במבוך"
-          description="חדש! עזרו לעכבר למצוא את הגבינה ב-5 מבוכים · 3 רמות קושי"
-          icon={Route}
-          color="bg-violet-600"
-          onClick={() => navigate('/games/maze')}
-        />
-        <ModuleCard
-          title="ארבע בשורה"
-          description="משחק חשיבה מול המחשב - סדרו ארבע דיסקיות ברצף · 3 רמות קושי"
-          icon={Grid3x3}
-          color="bg-blue-600"
-          onClick={() => navigate('/games/connect4')}
-        />
-        <ModuleCard
-          title="בונים מגדל!"
-          description="מפילים בלוקים בדיוק ובונים מגדל עד השמיים · 3 רמות קושי"
-          icon={Building2}
-          color="bg-sky-600"
-          onClick={() => navigate('/games/stack')}
-        />
-        <ModuleCard
-          title="שוברים לבנים!"
-          description="מקפיצים כדור ושוברים קיר של לבנים · 3 רמות קושי"
-          icon={BrickWall}
-          color="bg-indigo-500"
-          onClick={() => navigate('/games/bricks')}
-        />
-        <ModuleCard
-          title="הנחש הרעב"
-          description="מכוונים את הנחש לאכול תפוחים · 3 רמות קושי"
-          icon={Worm}
-          color="bg-emerald-600"
-          onClick={() => navigate('/games/snake')}
-        />
-        <ModuleCard
-          title="חותכים פירות!"
-          description="מחליקים את האצבע וחותכים פירות · 3 רמות קושי"
-          icon={Slice}
-          color="bg-rose-500"
-          onClick={() => navigate('/games/fruit')}
-        />
-        <ModuleCard
-          title="רוץ, דינו, רוץ!"
-          description="נוגעים כדי לקפוץ מעל מכשולים ואוספים כוכבים"
-          icon={Footprints}
-          color="bg-sky-500"
-          onClick={() => navigate('/games/runner')}
-        />
-        <ModuleCard
-          title="משחק הזיכרון"
-          description="מצאו את כל הזוגות · 3 רמות קושי"
-          icon={Brain}
-          color="bg-fuchsia-500"
-          onClick={() => navigate('/games/memory')}
-        />
-        <ModuleCard
-          title="תפסו את האוגר!"
-          description="משחק תגובה מהירה · 3 רמות קושי"
-          icon={Hammer}
-          color="bg-orange-500"
-          onClick={() => navigate('/games/whack')}
-        />
+      <main className="mx-auto flex max-w-2xl flex-col gap-6 px-4 pb-8 pt-2">
+        <Section title="🧠 משחקי חשיבה" games={THINKING} />
+        <Section title="⚡ משחקי זריזות" games={QUICK} />
       </main>
     </div>
   )
