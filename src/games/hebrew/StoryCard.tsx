@@ -5,6 +5,8 @@ import { SpeakButton } from '../../components/SoundControls'
 interface StoryCardProps {
   title: string
   story: string
+  /** Present on levels that have a vocalized version. */
+  nikud?: { on: boolean; toggle: () => void }
 }
 
 /**
@@ -12,7 +14,7 @@ interface StoryCardProps {
  * question and answers below it always fit on the phone. A long story
  * scrolls inside the card, or can be opened in full.
  */
-export function StoryCard({ title, story }: StoryCardProps) {
+export function StoryCard({ title, story, nikud }: StoryCardProps) {
   const textRef = useRef<HTMLDivElement>(null)
   const [overflowing, setOverflowing] = useState(false)
   const [expanded, setExpanded] = useState(false)
@@ -32,6 +34,19 @@ export function StoryCard({ title, story }: StoryCardProps) {
       <div className="mb-1 flex items-center gap-2 text-amber-700">
         <BookOpen className="h-5 w-5 shrink-0" aria-hidden />
         <h2 className="flex-1 font-bold">{title}</h2>
+        {nikud && (
+          <button
+            type="button"
+            onClick={nikud.toggle}
+            aria-pressed={nikud.on}
+            aria-label={nikud.on ? 'הסתרת הניקוד' : 'הצגת ניקוד'}
+            className={`flex min-h-11 shrink-0 items-center rounded-full px-3 text-sm font-semibold transition ${
+              nikud.on ? 'bg-amber-700 text-white' : 'bg-amber-100 text-amber-800'
+            }`}
+          >
+            {nikud.on ? 'נִקּוּד ✓' : 'ניקוד'}
+          </button>
+        )}
         <SpeakButton text={`${title}. ${story}`} label="הקראת הסיפור" />
         {(overflowing || expanded) && (
           <button

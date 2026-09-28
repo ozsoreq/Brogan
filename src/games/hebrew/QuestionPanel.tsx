@@ -9,6 +9,8 @@ interface QuestionPanelProps {
   feedback: Feedback
   locked: boolean
   onSelect: (option: string) => void
+  /** Maps a stored text to what is shown (e.g. with nikud). */
+  show?: (text: string) => string
 }
 
 export function QuestionPanel({
@@ -17,14 +19,15 @@ export function QuestionPanel({
   feedback,
   locked,
   onSelect,
+  show = (t) => t,
 }: QuestionPanelProps) {
   const correctOption = question.options[question.correctIndex]
 
   return (
     <div className="flex w-full flex-col gap-3">
       <div className="flex items-center gap-2">
-        <p className="flex-1 text-xl font-bold text-slate-800">{question.prompt}</p>
-        <SpeakButton text={`${question.prompt} ${question.options.join(', ')}`} label="הקראת השאלה" />
+        <p className="flex-1 text-xl font-bold text-slate-800">{show(question.prompt)}</p>
+        <SpeakButton text={`${show(question.prompt)} ${question.options.map(show).join(', ')}`} label="הקראת השאלה" />
       </div>
       <div className="flex flex-col gap-2">
         {question.options.map((option, index) => {
@@ -56,7 +59,7 @@ export function QuestionPanel({
               whileHover={locked ? {} : { scale: 1.01 }}
               className={`rounded-2xl px-5 py-3 text-right text-lg font-semibold transition-colors duration-200 ${tileStyle} disabled:cursor-default`}
             >
-              {option}
+              {show(option)}
             </motion.button>
           )
         })}

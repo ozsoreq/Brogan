@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AppHeader } from '../../components/AppHeader'
 import { FeedbackOverlay } from '../../components/FeedbackOverlay'
@@ -8,6 +8,17 @@ import { TOTAL_LEVELS } from './levels'
 import { QuestionPanel } from './QuestionPanel'
 import { StoryCard } from './StoryCard'
 import { useHebrewStoryGame } from './useHebrewStoryGame'
+import { display, NIKUD } from './nikud'
+
+const NIKUD_KEY = 'brogan-hebrew-nikud'
+
+function loadNikud() {
+  try {
+    return localStorage.getItem(NIKUD_KEY) !== '0'
+  } catch {
+    return true
+  }
+}
 
 interface HebrewLevelPlayProps {
   level: number
@@ -32,6 +43,20 @@ export function HebrewLevelPlay({ level, unlockUpTo }: HebrewLevelPlayProps) {
     selectOption,
     restart,
   } = useHebrewStoryGame(level)
+
+  // Early levels come with nikud (on by default, remembered on the device).
+  const hasNikud = NIKUD[title] !== undefined
+  const [nikudOn, setNikudOn] = useState(loadNikud)
+  const show = (text: string) => display(text, hasNikud && nikudOn)
+  const toggleNikud = () => {
+    const next = !nikudOn
+    setNikudOn(next)
+    try {
+      localStorage.setItem(NIKUD_KEY, next ? '1' : '0')
+    } catch {
+      // not critical
+    }
+  }
 
   useEffect(() => {
     if (finished && passed) unlockUpTo(level + 1)
@@ -66,7 +91,7 @@ export function HebrewLevelPlay({ level, unlockUpTo }: HebrewLevelPlayProps) {
           <>
             <div className="flex w-full flex-col items-center gap-2">
               <div className="flex w-full items-center justify-between text-sm font-medium text-slate-500">
-                <span>ניקוד: {score}</span>
+                <span>נקודות: {score}</span>
                 <span>
                   שאלה {currentIndex + 1} מתוך {total}
                 </span>
@@ -81,7 +106,11 @@ export function HebrewLevelPlay({ level, unlockUpTo }: HebrewLevelPlayProps) {
               </div>
             </div>
 
-            <StoryCard title={title} story={story} />
+            <StoryCard
+              title={show(title)}
+              story={show(story)}
+              nikud={hasNikud ? { on: nikudOn, toggle: toggleNikud } : undefined}
+            />
 
             <AnimatePresence mode="wait">
               {currentQuestion && (
@@ -100,6 +129,7 @@ export function HebrewLevelPlay({ level, unlockUpTo }: HebrewLevelPlayProps) {
                     feedback={feedback}
                     locked={locked}
                     onSelect={selectOption}
+                    show={show}
                   />
                 </motion.div>
               )}
