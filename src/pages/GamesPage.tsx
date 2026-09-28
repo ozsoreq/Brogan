@@ -12,7 +12,8 @@ interface GameEntry {
 }
 
 const THINKING: GameEntry[] = [
-  { path: 'maze', title: 'העכבר במבוך', art: '🐭🧀', gradient: 'from-violet-500 to-purple-700', isNew: true },
+  { path: 'simon', title: 'זוכרים את הרצף', art: '🐶🎵', gradient: 'from-pink-500 to-violet-700', isNew: true },
+  { path: 'maze', title: 'העכבר במבוך', art: '🐭🧀', gradient: 'from-violet-500 to-purple-700' },
   { path: 'connect4', title: 'ארבע בשורה', art: '🔴🟡', gradient: 'from-blue-500 to-blue-700' },
   { path: 'memory', title: 'משחק הזיכרון', art: '🃏', gradient: 'from-fuchsia-500 to-pink-700' },
 ]
@@ -38,7 +39,7 @@ function GameTile({ game, onOpen }: { game: GameEntry; onOpen: () => void }) {
       {game.isNew && (
         <span className="absolute left-2 top-2 rounded-full bg-amber-300 px-2 py-0.5 text-xs font-bold text-amber-950">חדש!</span>
       )}
-      <span className="text-5xl leading-none drop-shadow-sm" aria-hidden>
+      <span className="emoji text-5xl leading-none drop-shadow-sm" aria-hidden>
         {game.art}
       </span>
       <span className="text-center text-base font-bold leading-tight">{game.title}</span>

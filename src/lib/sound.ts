@@ -84,18 +84,27 @@ export function play(sound: Sound) {
     return
   }
   const { wave, volume, notes } = TUNES[sound]
-  for (const [freq, start, duration] of notes) {
-    const osc = ctx.createOscillator()
-    const gain = ctx.createGain()
-    osc.type = wave
-    osc.frequency.value = freq
-    gain.gain.setValueAtTime(0.0001, now + start)
-    gain.gain.exponentialRampToValueAtTime(volume, now + start + 0.01)
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + start + duration)
-    osc.connect(gain).connect(ctx.destination)
-    osc.start(now + start)
-    osc.stop(now + start + duration + 0.02)
-  }
+  for (const [freq, start, duration] of notes) tone(ctx, wave, volume, freq, now + start, duration)
+}
+
+function tone(ctx: AudioContext, wave: OscillatorType, volume: number, freq: number, at: number, duration: number) {
+  const osc = ctx.createOscillator()
+  const gain = ctx.createGain()
+  osc.type = wave
+  osc.frequency.value = freq
+  gain.gain.setValueAtTime(0.0001, at)
+  gain.gain.exponentialRampToValueAtTime(volume, at + 0.01)
+  gain.gain.exponentialRampToValueAtTime(0.0001, at + duration)
+  osc.connect(gain).connect(ctx.destination)
+  osc.start(at)
+  osc.stop(at + duration + 0.02)
+}
+
+/** A single musical note (e.g. a game button's own sound). */
+export function playNote(freq: number, seconds: number) {
+  if (muted) return
+  const ctx = context()
+  if (ctx) tone(ctx, 'triangle', 0.3, freq, ctx.currentTime, seconds)
 }
 
 export function canSpeak() {

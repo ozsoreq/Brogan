@@ -44,3 +44,9 @@ body {
     --pad-h: 56px;
   }
 }
+
+/* Big picture emoji: prefer the colour emoji fonts over any text font that happens
+   to have a plain black-and-white glyph for the same character. */
+.emoji {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Android Emoji", sans-serif;
+}

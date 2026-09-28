@@ -110,7 +110,7 @@ export function MazeBoard({ difficulty, onChangeDifficulty }: MazeBoardProps) {
           ))}
           <span
             data-mouse
-            className="absolute flex items-center justify-center leading-none"
+            className="emoji absolute flex items-center justify-center leading-none"
             style={{ ...pos(run.pos), fontSize: emojiSize, transition: 'left 55ms linear, top 55ms linear' }}
           >
             🐭
