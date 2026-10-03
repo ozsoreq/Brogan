@@ -12,7 +12,8 @@ interface GameEntry {
 }
 
 const THINKING: GameEntry[] = [
-  { path: 'simon', title: 'זוכרים את הרצף', art: '🐶🎵', gradient: 'from-pink-500 to-violet-700', isNew: true },
+  { path: 'oddone', title: 'מצאו את השונה', art: '🔍', gradient: 'from-teal-500 to-teal-700', isNew: true },
+  { path: 'simon', title: 'זוכרים את הרצף', art: '🐶🎵', gradient: 'from-pink-500 to-violet-700' },
   { path: 'maze', title: 'העכבר במבוך', art: '🐭🧀', gradient: 'from-violet-500 to-purple-700' },
   { path: 'connect4', title: 'ארבע בשורה', art: '🔴🟡', gradient: 'from-blue-500 to-blue-700' },
   { path: 'memory', title: 'משחק הזיכרון', art: '🃏', gradient: 'from-fuchsia-500 to-pink-700' },
