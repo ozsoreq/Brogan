@@ -17,7 +17,10 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const { request } = event
-  if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) return
+  const url = new URL(request.url)
+  if (request.method !== 'GET' || url.origin !== self.location.origin) return
+  // Vercel's own endpoints (Web Analytics) must always reach the network, never the cache.
+  if (url.pathname.startsWith('/_vercel/')) return
 
   // Pages: try the network so updates arrive, fall back to the cached app offline.
   if (request.mode === 'navigate') {
