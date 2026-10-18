@@ -29,6 +29,7 @@ const Connect4Game = page(() => import('./games/connect4/Connect4Game'), 'Connec
 const MazeGame = page(() => import('./games/maze/MazeGame'), 'MazeGame')
 const SimonGame = page(() => import('./games/simon/SimonGame'), 'SimonGame')
 const OddOneGame = page(() => import('./games/oddOne/OddOneGame'), 'OddOneGame')
+const SortGame = page(() => import('./games/colorSort/SortGame'), 'SortGame')
 
 function Loading() {
   return (
@@ -67,6 +68,7 @@ function App() {
           <Route path="/games/maze/:choice?" element={<MazeGame />} />
           <Route path="/games/simon/:choice?" element={<SimonGame />} />
           <Route path="/games/oddone/:choice?" element={<OddOneGame />} />
+          <Route path="/games/colorsort/:choice?" element={<SortGame />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
